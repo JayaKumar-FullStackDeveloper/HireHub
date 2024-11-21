@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mongod": "^2.0.0",
+    "mongoose": "^8.6.2",
+    "nodemon": "^3.1.4"
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
