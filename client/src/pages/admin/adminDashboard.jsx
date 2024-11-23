@@ -1,84 +1,83 @@
 import React, { useState } from "react";
-import { FaTachometerAlt, FaStore, FaChartPie, FaComments, FaUsers, FaCog, FaSignOutAlt } from "react-icons/fa";
-import { FaHireAHelper } from "react-icons/fa6";
+import {
+    FaTachometerAlt,
+    FaStore,
+    FaChartPie,
+    FaComments,
+    FaCog,
+    FaSignOutAlt,
+    FaHireAHelper,
+} from "react-icons/fa";
 import { RiMenuFold4Line, RiMenuFold3Line2 } from "react-icons/ri";
 import { Link } from "react-router-dom";
-
-
 
 function AdminDashboard({ children }) {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
-
     return (
         <>
             <div className="flex flex-row h-screen w-full">
-                {/* sidebar */}
-                <div className={`flex w-72 bg-grey h-screen  ${isCollapsed ? "w-16" : "w-72"
-                    } bg-white flex-col transition-all duration-100`}>
-                    <div className="flex items-center pb-1 z-50">
-                        <button className="flex self-center gap-2 ml-2 " >
-                            <FaHireAHelper className='text-3xl mx-2 text-blue my-3' />
-                            <h1 className={`text-center self-center text-sky-600 ${isCollapsed ? "hidden" : "block"
-                                } pr-8 text-2xl font-bold`}>HireHub</h1>
-                        </button>
+                {/* Sidebar */}
+                <div
+                    className={`flex ${isCollapsed ? "w-16" : "w-72"
+                        } bg-white h-screen flex-col transition-all duration-300`}
+                >
+                    {/* Logo Section */}
+                    <div className="flex items-center pb-4 pt-4 px-4">
+                        <FaHireAHelper className="text-3xl text-sky-600" />
+                        {!isCollapsed && (
+                            <h1 className="text-sky-600 text-2xl font-bold ml-2">HireHub</h1>
+                        )}
                     </div>
-                    <div className='bg-white h-full w-full flex flex-col justify-between'>
-                        {/* Menu Section */}
-                        <ul className="mt-8">
-                            {/* Top Menu Items */}
-                            <li className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"} transition-all duration-100`}>
-                                <Link className="flex items-center px-4 py-2 text-gray-700">
-                                    <FaTachometerAlt className="text-lg     " />
-                                    {!isCollapsed && <span className="ml-4">Dashboard</span>}
-                                </Link>
-                            </li>
-                            <li className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"} transition-all duration-100`}>
-                                <Link className="flex items-center px-4 py-2 text-gray-700">
-                                    <FaStore className="text-lg" />
-                                    {!isCollapsed && <span className="ml-4">My Store</span>}
-                                </Link>
-                            </li>
-                            <li className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"} transition-all duration-100`}>
-                                <Link className="flex items-center px-4 py-2 text-gray-700">
-                                    <FaChartPie className="text-lg" />
-                                    {!isCollapsed && <span className="ml-4">Analytics</span>}
-                                </Link>
-                            </li>
-                            <li className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"} transition-all duration-100`}>
-                                <Link className="flex items-center px-4 py-2 text-gray-700">
-                                    <FaComments className="text-lg" />
-                                    {!isCollapsed && <span className="ml-4">Message</span>}
-                                </Link>
-                            </li>
-                            <li className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"} transition-all duration-100`}>
-                                <Link className="flex items-center px-4 py-2 text-gray-700">
-                                    <FaUsers className="text-lg" />
-                                    {!isCollapsed && <span className="ml-4">Team</span>}
-                                </Link>
-                            </li>
+
+                    {/* Menu Section */}
+                    <div className="flex-1 bg-white flex flex-col justify-between">
+                        <ul className="mt-4">
+                            {/* Menu Items */}
+                            {[
+                                { icon: <FaTachometerAlt />, label: "Dashboard" },
+                                { icon: <FaStore />, label: "Candidates" },
+                                { icon: <FaChartPie />, label: "Companies" },
+                                { icon: <FaComments />, label: "Notifications" },
+                            ].map((item, index) => (
+                                <li
+                                    key={index}
+                                    className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"
+                                        } transition-all duration-100`}
+                                >
+                                    <Link className="flex items-center px-4 py-2 text-gray-700">
+                                        {item.icon}
+                                        {!isCollapsed && (
+                                            <span className="ml-4">{item.label}</span>
+                                        )}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
-                        <div className="mb-4">
-                        <ul className="w-full">
-                            <li className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"} transition-all duration-100`}>
+                        <ul className="mb-4">
+                            <li
+                                className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"
+                                    } transition-all duration-100`}
+                            >
                                 <Link className="flex items-center px-4 py-2 text-gray-700">
                                     <FaCog className="text-lg" />
                                     {!isCollapsed && <span className="ml-4">Settings</span>}
                                 </Link>
                             </li>
-                            <li className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"} transition-all duration-100`}>
+                            <li
+                                className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"
+                                    } transition-all duration-100`}
+                            >
                                 <Link className="flex items-center px-4 py-2 text-red-600">
                                     <FaSignOutAlt className="text-lg" />
                                     {!isCollapsed && <span className="ml-4">Logout</span>}
                                 </Link>
                             </li>
                         </ul>
-                        </div>
                     </div>
                 </div>
-                {/* header */}
                 <div className='flex flex-col w-full h-screen bg-white'>
-                    <div className='w-full h-16 flex px-1 my-auto justify-between bg-white'>
+                    <div className='w-full bg-white h-16 flex px-1 my-auto justify-between'>
                         <div className='flex mx-2 w-full'>
                             <button onClick={() => setIsCollapsed(!isCollapsed)}>
                                 {isCollapsed ? <RiMenuFold4Line className='text-xl my-auto ' /> : <RiMenuFold3Line2 className='text-xl my-auto ' />
@@ -109,12 +108,10 @@ function AdminDashboard({ children }) {
 
                     </div>
                     {/* content  */}
-                    <div className='bg-orange-200 w-full h-screen rounded-tl-3xl'>
+                    <div className='bg-gray-100 w-full h-screen rounded-tl-3xl'>
                         {children}
                     </div>
                 </div>
-
-
             </div>
         </>
     );

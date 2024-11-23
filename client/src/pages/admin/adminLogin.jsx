@@ -1,4 +1,3 @@
-// pages/admin/AdminLogin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -20,6 +19,7 @@ const AdminLogin = () => {
       const userResponse = await axios.get("http://localhost:4000/api/admin/me", {
         headers: { Authorization: `Bearer ${response.data.token}` },
       });
+
       login(userResponse.data, response.data.token);
       console.log('Login Successful');
       navigate('/admin');
@@ -29,7 +29,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
+    <div className="flex items-center justify-center min-h-screen bg-white">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Admin Login</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -57,7 +57,7 @@ const AdminLogin = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full py-3 bg-blue-600 bg-sky-400 text-white font-semibold rounded-lg shadow-md hover:bg-neutral-100focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             Login
           </button>
