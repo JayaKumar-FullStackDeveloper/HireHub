@@ -2,11 +2,10 @@
 
 # dependencies
 /node_modules
-node_modules/
 /.pnp
 .pnp.js
 
-# testinggit
+# testing
 /coverage
 
 # production
@@ -18,6 +17,7 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+.env
 
 npm-debug.log*
 yarn-debug.log*
