@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import { AuthProvider } from '../components/AuthProvider';
-import { AdminRoute, UserRoute } from '../components/ProtectedRoutes';
+import { AdminRoute } from '../components/ProtectedRoutes';
 import Error404 from '../components/Error404';
 import AdminLogin from '../pages/admin/adminLogin';
 import AdminDashboard from '../pages/admin/adminDashboard';
@@ -18,17 +18,18 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <UserRoute />,
+        // element: <UserRoute />,
         children: [
           { path:'', element:<HomePage/>},
-          { path: 'dashboard', element: <AdminDashboard></AdminDashboard> },  
         ],
       },
 
       {
-        path: '/admin',
+        path: '/admin/dashboard',
         element: <AdminRoute />,
         children: [
+        { path: '', element: <AdminDashboard></AdminDashboard> }
+
         ],
       },
       { path: 'auth/admin/login', element: <AdminLogin /> },

@@ -30,7 +30,7 @@ const registerAdmin = async (req, res) => {
 
 const loginAdmin = async (req, res) => {
   try {
-    console.log('Request Body:', req.body);
+    // console.log('Request Body:', req.body);
     const { email, password } = req.body;
     const admin = await Admin.findOne({ email });
     if (!admin) {
@@ -41,24 +41,28 @@ const loginAdmin = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     const token = generateToken({id: admin._id , role: admin.role , email: admin.email})
-    res.json({ token });
+    // res.json({ token , id: admin._id , role: admin.role , email: admin.email});
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
-// Get All Admins
-const getAllAdmins = async (req, res) => {
+const getAdminProfile = async (req, res) => {
   try {
-    const admins = await Admin.find().select('-password'); 
-    res.status(200).json(admins);
+    const admin = await Admin.findById(req.admin.id).select('-password');
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+    res.json({ id: admin._id, email: admin.email, role: admin.role });
+    console.log( res.json);
+    
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching admins', error: error.message });
+    res.status(500).json({ message: 'Server error', error });
   }
 };
 
 module.exports = {
   registerAdmin,
   loginAdmin,
-  getAllAdmins
+  getAdminProfile
 };

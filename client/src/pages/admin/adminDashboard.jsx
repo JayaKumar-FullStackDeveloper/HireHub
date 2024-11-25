@@ -9,10 +9,20 @@ import {
     FaHireAHelper,
 } from "react-icons/fa";
 import { RiMenuFold4Line, RiMenuFold3Line2 } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../../components/AuthProvider';
+
 
 function AdminDashboard({ children }) {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+
+    const handleLogout = () => {
+       logout()
+       navigate('/');
+      };
 
     return (
         <>
@@ -68,10 +78,10 @@ function AdminDashboard({ children }) {
                                 className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"
                                     } transition-all duration-100`}
                             >
-                                <Link className="flex items-center px-4 py-2 text-red-600">
+                                <div className="flex items-center px-4 py-2 text-red-600" onClick={handleLogout}>
                                     <FaSignOutAlt className="text-lg" />
                                     {!isCollapsed && <span className="ml-4">Logout</span>}
-                                </Link>
+                                </div>
                             </li>
                         </ul>
                     </div>
