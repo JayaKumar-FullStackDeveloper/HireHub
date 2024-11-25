@@ -2,7 +2,7 @@ const Admin = require('../models/adminModels');
 const { generateToken } = require('../utils/jwtUtils');
 const registerAdmin = async (req, res) => {
   try {
-    console.log('Request Body:', req.body); // Log the request body
+    console.log('Request Body:', req.body); 
     
     const { name, email, password } = req.body;
 
@@ -41,7 +41,7 @@ const loginAdmin = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     const token = generateToken({id: admin._id , role: admin.role , email: admin.email})
-    // res.json({ token , id: admin._id , role: admin.role , email: admin.email});
+    res.json({ token , id: admin._id , role: admin.role , email: admin.email});
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

@@ -6,6 +6,9 @@ import Error404 from '../components/Error404';
 import AdminLogin from '../pages/admin/adminLogin';
 import AdminDashboard from '../pages/admin/adminDashboard';
 import HomePage from '../components/home';
+import DashboardOverview from '../pages/admin/dashboardOverview';
+import ApprovedCompany from '../pages/admin/approvedCompany';
+import RejectedCompany from '../pages/admin/rejectedCompany';
 
 export const router = createBrowserRouter([
   {
@@ -23,12 +26,15 @@ export const router = createBrowserRouter([
           { path:'', element:<HomePage/>},
         ],
       },
-
+      
       {
-        path: '/admin/dashboard',
+        path: '/admin',
         element: <AdminRoute />,
         children: [
-        { path: '', element: <AdminDashboard></AdminDashboard> }
+          { path: '', element: <AdminDashboard><DashboardOverview/></AdminDashboard> },
+          { path: 'dashboard/approved-application', element: <AdminDashboard><ApprovedCompany/></AdminDashboard> },
+          { path: 'dashboard/manage-application', element: <AdminDashboard><ApprovedCompany/></AdminDashboard> },
+          { path: 'dashboard/rejected-application', element: <AdminDashboard><RejectedCompany/></AdminDashboard> }
 
         ],
       },

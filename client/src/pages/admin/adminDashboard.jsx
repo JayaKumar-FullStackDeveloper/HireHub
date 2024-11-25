@@ -15,14 +15,24 @@ import { useAuth } from '../../components/AuthProvider';
 
 function AdminDashboard({ children }) {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [activeMenu, setActiveMenu] = useState(null); 
+  const [activeSubmenu, setActiveSubmenu] = useState(null); 
+  const handleMenuClick = (menu) => {
+    setActiveMenu((prevMenu) => (prevMenu === menu ? null : menu)); 
+    setActiveSubmenu(null);
+  };
+
+  const handleSubmenuClick = (submenu) => {
+    setActiveSubmenu(submenu); 
+  };
     const { logout } = useAuth();
     const navigate = useNavigate();
 
 
     const handleLogout = () => {
-       logout()
-       navigate('/');
-      };
+        logout()
+        navigate('/');
+    };
 
     return (
         <>
@@ -43,7 +53,6 @@ function AdminDashboard({ children }) {
                     {/* Menu Section */}
                     <div className="flex-1 bg-white flex flex-col justify-between">
                         <ul className="mt-4">
-                            {/* Menu Items */}
                             {[
                                 { icon: <FaTachometerAlt />, label: "Dashboard" },
                                 { icon: <FaStore />, label: "Candidates" },
@@ -52,15 +61,59 @@ function AdminDashboard({ children }) {
                             ].map((item, index) => (
                                 <li
                                     key={index}
-                                    className={`hover:bg-gray-300 ${!isCollapsed && "rounded-r-full"
-                                        } transition-all duration-100`}
+                                    className={`hover:bg-gray-300 ${activeMenu === item.label ? "bg-gray-200" : ""}  transition-all duration-100`}
                                 >
-                                    <Link className="flex items-center px-4 py-2 text-gray-700">
+                                    <button
+                                        className="flex items-center w-full px-4 py-2 text-gray-700"
+                                        onClick={() => handleMenuClick(item.label)}
+                                    >
                                         {item.icon}
-                                        {!isCollapsed && (
-                                            <span className="ml-4">{item.label}</span>
-                                        )}
-                                    </Link>
+                                        {!isCollapsed && <span className="ml-4">{item.label}</span>}
+                                    </button>
+
+                                    {/* Submenu for "Companies" */}
+                                    {item.label === "Candidates" && activeMenu === "Candidates" && (
+                                        <ul className="ml-8 mt-1">
+                                            {["Overview", "Employees", "Projects"].map((submenu, subIndex) => (
+                                                <li
+                                                    key={subIndex}
+                                                    className={`px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-200 ${activeSubmenu === submenu ? "bg-blue-100 text-blue-600" : ""
+                                                        }`}
+                                                    onClick={() => handleSubmenuClick(submenu)}
+                                                >
+                                                    {submenu}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                    {item.label === "Companies" && activeMenu === "Companies" && (
+                                        <ul className="ml-8 mt-1 text-left">
+                                            {["Manage Application", "Approved Application", "Rejected Application", "Create Application"].map((submenu, subIndex) => (
+                                                <li
+                                                    key={subIndex}
+                                                    className={`px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-200 ${activeSubmenu === submenu ? "bg-blue-100 text-blue-600" : ""
+                                                        }`}
+                                                    onClick={() => handleSubmenuClick(submenu)}
+                                                >
+                                                    {submenu}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                    {item.label === "Notifications" && activeMenu === "Notifications" && (
+                                        <ul className="ml-8 mt-2">
+                                            {["Email"].map((submenu, subIndex) => (
+                                                <li
+                                                    key={subIndex}
+                                                    className={`px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-200 ${activeSubmenu === submenu ? "bg-blue-100 text-blue-600" : ""
+                                                        }`}
+                                                    onClick={() => handleSubmenuClick(submenu)}
+                                                >
+                                                    {submenu}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </li>
                             ))}
                         </ul>
@@ -127,4 +180,4 @@ function AdminDashboard({ children }) {
     );
 }
 
-export default AdminDashboard;
+export default AdminDashboard;  
