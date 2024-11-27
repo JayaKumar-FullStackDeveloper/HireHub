@@ -40,7 +40,7 @@ const loginAdmin = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
-    const token = generateToken({id: admin._id , role: admin.role , email: admin.email})
+    const token = generateToken({id: admin._id , role: admin.role , email: admin.email, name: admin.name})
     res.json({ token , id: admin._id , role: admin.role , email: admin.email});
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -53,7 +53,7 @@ const getAdminProfile = async (req, res) => {
     if (!admin) {
       return res.status(404).json({ message: 'Admin not found' });
     }
-    res.json({ id: admin._id, email: admin.email, role: admin.role });
+    res.json({ id: admin._id, role: admin.role , name: admin.name});
     console.log( res.json);
     
   } catch (error) {

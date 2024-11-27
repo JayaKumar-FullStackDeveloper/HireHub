@@ -7,8 +7,9 @@ import AdminLogin from '../pages/admin/adminLogin';
 import AdminDashboard from '../pages/admin/adminDashboard';
 import HomePage from '../components/home';
 import DashboardOverview from '../pages/admin/dashboardOverview';
-import ApprovedCompany from '../pages/admin/approvedCompany';
-import RejectedCompany from '../pages/admin/rejectedCompany';
+import ManagedCompany from '../pages/admin/managedCompany';
+import ApprovedCompanyies from '../pages/admin/approvedCompany';
+import RejectedCompanys from '../pages/admin/rejectedCompany';
 
 export const router = createBrowserRouter([
   {
@@ -32,10 +33,9 @@ export const router = createBrowserRouter([
         element: <AdminRoute />,
         children: [
           { path: '', element: <AdminDashboard><DashboardOverview/></AdminDashboard> },
-          { path: 'dashboard/approved-application', element: <AdminDashboard><ApprovedCompany/></AdminDashboard> },
-          { path: 'dashboard/manage-application', element: <AdminDashboard><ApprovedCompany/></AdminDashboard> },
-          { path: 'dashboard/rejected-application', element: <AdminDashboard><RejectedCompany/></AdminDashboard> }
-
+          { path: 'dashboard/Companies/Approved', element: <AdminDashboard><ApprovedCompanyies/></AdminDashboard> },
+          { path: 'dashboard/Companies/Rejected', element: <AdminDashboard><RejectedCompanys/></AdminDashboard> },
+          { path: 'dashboard/Companies/Manage', element: <AdminDashboard><ManagedCompany/></AdminDashboard> }
         ],
       },
       { path: 'auth/admin/login', element: <AdminLogin /> },

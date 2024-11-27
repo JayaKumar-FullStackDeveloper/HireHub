@@ -105,7 +105,7 @@ function AdminLogin() {
                     <form onSubmit={handleOnSubmit}>
                         <div className="mb-4">
                             <label
-                                className="block text-pink-600 text-sm font-bold mb-2 text-left"
+                                className="block text-zinc-950 text-sm font-bold mb-2 text-left"
                                 htmlFor="email"
                             >
                                 Email
@@ -122,7 +122,7 @@ function AdminLogin() {
                         </div>
                         <div className="mb-4 relative">
                             <label
-                                className="block text-pink-600 text-sm font-bold mb-2 text-left"
+                                className="block text-zinc-950 text-sm font-bold mb-2 text-left"
                                 htmlFor="password"
                             >
                                 Password
