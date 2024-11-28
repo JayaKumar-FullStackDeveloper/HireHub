@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
-  FaTachometerAlt,
-  FaStore,
-  FaChartPie,
   FaComments,
-  FaCog,
   FaSignOutAlt,
   FaHireAHelper,
 } from "react-icons/fa";
+import { ImOffice } from "react-icons/im";
+import { BsPersonWorkspace } from "react-icons/bs";
+import { BiSolidDashboard } from "react-icons/bi";
 import { RiMenuFoldFill, RiMenuUnfoldFill } from "react-icons/ri";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import LogoutConfirmation from "./logoutConfirmation";
@@ -78,31 +77,30 @@ function AdminDashboard({ children }) {
             <ul className="mt-4">
               {[
                 {
-                  icon: <FaTachometerAlt />,
+                  icon: <BiSolidDashboard className="text-xl" />,
                   label: "Dashboard",
                   route: "/admin",
                 },
-                { icon: <FaStore />, label: "Candidates" },
-                { icon: <FaChartPie />, label: "Companies" },
-                { icon: <FaComments />, label: "Notifications" },
+                { icon: <BsPersonWorkspace   className="text-lg" />, label: "Candidates" },
+                { icon:<ImOffice  className="text-lg" />, label: "Companies" },
+                { icon: <FaComments  className="text-lg" />, label: "Notifications" },
               ].map((item, index) => (
-                <li key={index}>
+                <li key={index} className="pb-1">
                   <button
                     className={`flex items-center w-full px-4 py-2 justify-between text-gray-700 ${activeMenu === item.label ? "bg-blue text-white" : ""
                       }`}
                     onClick={() => handleMenuClick(item)}
                   >
                     <div className="flex my-auto">
-                      <span className="ml-2 my-auto self-center">{item.icon}</span>
+                      <span className="ml-q my-auto self-center">{item.icon}</span>
                       {!isCollapsed && <span className="ml-4">{item.label}</span>}</div>
-                    {activeMenu === item.label ? (
-                      item.label === 'Dashboard' ? null : (
-                        <RiArrowDownDoubleFill className="rotate-180"/>
+                    {!isCollapsed && item.label !== 'Dashboard' && (
+                      activeMenu === item.label ? (
+                        <RiArrowDownDoubleFill className="rotate-180" />
+                      ) : (
+                        <RiArrowDownDoubleFill className="text-amber-600" />
                       )
-                    ) : (
-                      item.label === 'Dashboard' ? null : <RiArrowDownDoubleFill className="text-amber-600" />
                     )}
-
                   </button>
 
                   {/* Submenus */}
@@ -113,24 +111,24 @@ function AdminDashboard({ children }) {
                         {[
                           {
                             label: "Paid Candidates",
-                            route: "/dashboard/candidates/paid",
+                            route: "/admin/dashboard/candidates/paid",
                           },
                           {
                             label: "Unpaid Candidates",
-                            route: "/dashboard/candidates/unpaid",
+                            route: "/admin/dashboard/candidates/unpaid",
                           },
                           {
                             label: "Add Candidates",
-                            route: "/dashboard/candidates/add",
+                            route: "/admin/dashboard/candidates/add",
                           },
                           {
                             label: "Import Candidates",
-                            route: "/dashboard/candidates/import",
+                            route: "/admin/dashboard/candidates/import",
                           },
                         ].map((submenu, subIndex) => (
                           <Link to={submenu.route} key={subIndex}>
                             <li
-                              className={`px-4 py-2 rounded-lg cursor-pointer ${isActive(submenu.route)
+                              className={`px-4 py-2 cursor-pointer ${isActive(submenu.route)
                                 ? "bg-blue hover:bg-blue text-white"
                                 : "hover:bg-gray-200 "
                                 }`}
@@ -184,7 +182,7 @@ function AdminDashboard({ children }) {
                         ].map((submenu, subIndex) => (
                           <Link to={submenu.route} key={subIndex}>
                             <li
-                              className={`px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-200 ${isActive(submenu.route)
+                              className={`px-4 py-2 cursor-pointer hover:bg-gray-200 ${isActive(submenu.route)
                                 ? "bg-blue text-white"
                                 : ""
                                 }`}
@@ -199,12 +197,6 @@ function AdminDashboard({ children }) {
               ))}
             </ul>
             <ul className="mb-4">
-              <li>
-                <button className="flex items-center w-full px-4 py-2 text-gray-700 hover:text-blue">
-                  <FaCog className="text-lg" />
-                  {!isCollapsed && <span className="ml-4">Settings</span>}
-                </button>
-              </li>
               <li>
                 <button
                   className="flex items-center w-full px-4 py-2 text-red-600 hover:text-red-800"
@@ -223,7 +215,7 @@ function AdminDashboard({ children }) {
             </ul>
           </div>
         </div>
-        <div className="flex flex-col w-full h-screen bg-white">
+        <div className="flex flex-col w-screen h-screen bg-white">
           <div className="w-full bg-white h-16 flex px-1 my-auto justify-between">
             <div className='flex mx-2 w-full'>
               <button
@@ -247,7 +239,7 @@ function AdminDashboard({ children }) {
                     />
                     <button
                       type="submit"
-                      class="search-btn absolute right-0 h-full bg-blue my-auto pt-1 rounded-r-3xl px-2"
+                      className="search-btn absolute right-0 h-full bg-blue my-auto pt-1 rounded-r-3xl px-2"
                     >
                       <lord-icon
                         src="https://cdn.lordicon.com/fkdzyfle.json"
@@ -266,10 +258,10 @@ function AdminDashboard({ children }) {
               </span>
             </div>{" "}
           </div>
-          <div className="bg-gray-100 w-full h-screen rounded-tl-3xl p-2 overflow-y-auto">
+         
 
-            {children}
-          </div>
+          <div className="bg-gray-100 w-full h-screen rounded-tl-3xl p-2 overflow-y-auto">
+          {React.cloneElement(children, { isCollapsed })}</div>
         </div>
       </div>
     </>

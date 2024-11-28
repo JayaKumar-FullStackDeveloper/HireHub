@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { FcUpload } from "react-icons/fc";
+import ExportToExcel from '../../../components/exportToExcel';
 
 
-const ApprovedCompany = () => {
+const RejectedCompanys = () => {
   const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
@@ -20,7 +20,6 @@ const ApprovedCompany = () => {
     fetchCompanies();
   }, [companies]);
 
-  const approvedCompanies = companies.filter((company) => company.status === 'Approved');
   const rowVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i) => ({
@@ -29,21 +28,19 @@ const ApprovedCompany = () => {
       transition: { delay: i * 0.1 },
     }),
   };
+  const rejectedCompanies = companies.filter((company) => company.status === 'Rejected');
 
   return (
     <div className="max-w-6xl mx-auto">
       <div className='w-full justify-between flex mb-2'>
-        <h1 className="text-2xl font-bold text-left">Approved Company</h1>
-        <div className='self-center flex border-green-500 border-2 px-4 py-1 gap-2 justify-between rounded-lg'>
-          <FcUpload  className='my-auto'/>
-          <h5 className='font-medium'>Export</h5>
-        </div>
-      </div>
+        <h1 className="text-2xl font-bold self-center text-left">Rejected Company</h1>
+        <ExportToExcel data={rejectedCompanies} fileName="Rejected_Companies_List" />
 
-      {approvedCompanies.length === 0 ? (
+      </div>
+      {rejectedCompanies.length === 0 ? (
         <p>Loading company details...</p>
       ) : (
-        <div className="w-full h-[520px] overflow-scroll scrollbar-hide border border-gray-300 rounded-lg mt-2" style={{
+        <div className="w-full h-[520px] overflow-scroll scrollbar-hide border border-gray-300 rounded-lg" style={{
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
         }}>
@@ -65,7 +62,7 @@ const ApprovedCompany = () => {
               </tr>
             </thead>
             <tbody>
-              {approvedCompanies.map((company, index) => (
+              {rejectedCompanies.map((company, index) => (
                 <motion.tr
                   key={company._id}
                   className="text-center hover:bg-gray-100 cursor-pointer"
@@ -120,4 +117,4 @@ const ApprovedCompany = () => {
   );
 };
 
-export default ApprovedCompany;
+export default RejectedCompanys;
