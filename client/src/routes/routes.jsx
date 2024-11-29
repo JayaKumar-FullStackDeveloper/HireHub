@@ -13,7 +13,7 @@ import RejectedCompanys from '../pages/admin/companies/rejectedCompany';
 import PaidCandidates from '../pages/admin/candidates/paidCandidate';
 import UnPaidCandidates from '../pages/admin/candidates/unPaidCandidates';
 import AddCandidates from '../pages/admin/candidates/addCandidates';
-import ImportCandidate from '../pages/admin/candidates/importCandidate';
+import ImportCandidates from '../pages/admin/candidates/importCandidate';
 
 export const router = createBrowserRouter([
   {
@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
           { path: 'dashboard/candidates/paid', element: <AdminDashboard><PaidCandidates/></AdminDashboard> },
           { path: 'dashboard/candidates/unpaid', element: <AdminDashboard><UnPaidCandidates/></AdminDashboard> },
           { path: 'dashboard/candidates/add', element: <AdminDashboard><AddCandidates/></AdminDashboard> },
-          { path: 'dashboard/candidates/import', element: <AdminDashboard><ImportCandidate/></AdminDashboard> },
+          { path: 'dashboard/candidates/import', element: <AdminDashboard><ImportCandidates/></AdminDashboard> },
         ],
       },
       { path: 'auth/admin/login', element: <AdminLogin /> },

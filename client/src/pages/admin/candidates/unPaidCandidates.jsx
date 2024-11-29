@@ -2,11 +2,25 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import ExportToExcel from '../../../components/exportToExcel';
+import { MdModeEdit } from "react-icons/md";
+import EditCandidateModal from './editCandidateModel';
 
 const UnPaidCandidates = ({ isCollapsed }) => {
   const [candidates, setCandidates] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resumeUrl, setResumeUrl] = useState('');
+  const [selectedCandidate, setSelectedCandidate] = useState({
+    fullName: '',
+    email: '',
+    mobileNumber: '',
+    dob: '',
+    gender: '',
+    qualification: '',
+    passedOut: '',
+    age: '',
+    resume: null
+  });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -40,8 +54,16 @@ const UnPaidCandidates = ({ isCollapsed }) => {
     setIsModalOpen(false);
     setResumeUrl('');
   };
+  const openEditModal = (candidate) => {
+    setSelectedCandidate(candidate);
+    setIsEditModalOpen(true);
+  };
 
-
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedCandidate(null);
+  };
+ 
   return (
     <div className={`mx-auto ${isCollapsed ? 'max-w-7xl' : 'max-w-6xl'}`}>      
       <div className='w-full justify-between flex mb-2'>
@@ -51,7 +73,7 @@ const UnPaidCandidates = ({ isCollapsed }) => {
       {unPaidOnly.length === 0 ? (
         <p>Loading candidates details...</p>
       ) : (
-        <div className="w-full h-[520px] overflow-scroll scrollbar-hide border border-gray-300 rounded-lg mt-2" style={{
+        <div className="w-full h-[560px] overflow-scroll scrollbar-hide border border-gray-300 rounded-lg mt-2" style={{
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
         }}>
@@ -70,10 +92,11 @@ const UnPaidCandidates = ({ isCollapsed }) => {
                 <th className="py-2 px-4 border">Qualification</th>
                 <th className="py-2 px-4 border">Graduation</th>
                 <th className="py-2 px-4 border">Resume</th>
+                <th className="py-2 px-4 border">Action</th>
               </tr>
             </thead>
             <tbody>
-              {unPaidOnly.map((user, index) => (
+            {unPaidOnly.map((user, index) => (
                 <motion.tr
                   key={user._id}
                   className="text-center hover:bg-gray-100 cursor-pointer"
@@ -82,22 +105,42 @@ const UnPaidCandidates = ({ isCollapsed }) => {
                   initial="hidden"
                   animate="visible"
                 >
-                  <td className="py-2 px-2 border whitespace-nowrap text-base font-normal">{index + 1}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">{user.fullName}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">{user.joiningDate}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">{user.dob}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">{user.age}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">{user.gender}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">{user.email}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">{user.mobileNumber}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base text-orange-600 font-medium "><span className='bg-orange-50 py-1 px-3 rounded-md '>{user.paymentStatus}</span></td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">{user.qualification}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">{user.passedOut}</td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
-                    <div 
-                      onClick={() => openModal(user.resume)} 
+                  <td className="py-2 px-2 border-y whitespace-nowrap text-base font-normal">{index + 1}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">{user.fullName}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
+                    {user.joiningDate
+                      ? new Date(user.dob).toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                      })
+                      : 'N/A'}
+                  </td>                  
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
+                    {user.dob ? new Date(user.dob).toISOString().split('T')[0] : 'N/A'}
+                  </td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">{user.age}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">{user.gender}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">{user.email}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">{user.mobileNumber}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base text-green-600 font-medium "><span className='bg-green-50 py-1 px-4 rounded-md '>{user.paymentStatus}</span></td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">{user.qualification}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">{user.passedOut}</td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
+                    <div
+                      onClick={() => openModal(user.resume)}
                       className="text-white bg-green-700 py-1 px-2 font-medium rounded-md">
                       View Resume
+                    </div>
+                  </td>
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
+                    <div
+                      className="text-amber-900 flex border-rose-700  border-2 py-1 px-2 font-medium rounded-md" onClick={() => openEditModal(user)}
+                    >
+                      <MdModeEdit className='pr-1 flex self-center text-lg' /> Edit
                     </div>
                   </td>
                 </motion.tr>
@@ -123,6 +166,14 @@ const UnPaidCandidates = ({ isCollapsed }) => {
             ></iframe>
           </div>
         </div>
+      )}
+      {isEditModalOpen && selectedCandidate && (
+        <EditCandidateModal
+          selectedCandidate={selectedCandidate}
+          setSelectedCandidate={setSelectedCandidate}
+          closeEditModal={closeEditModal}
+          setIsEditModalOpen={setIsEditModalOpen}
+        />
       )}
     </div>
   );

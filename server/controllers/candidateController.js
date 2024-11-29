@@ -35,7 +35,7 @@ const  createCandidate = async (req, res) => {
 
 const updateCandidateById = async (req, res) => {
     try {
-      const { fullName, email, dob, gender, mobileNumber, qualification, passedOut, paymentStatus } = req.body;
+      const { fullName, email, dob, gender, mobileNumber, qualification, passedOut, paymentStatus,age } = req.body;
   
       const resume = req.file ? req.file.path : null;
   
@@ -62,6 +62,7 @@ const updateCandidateById = async (req, res) => {
       if (paymentStatus) updateData.paymentStatus = paymentStatus;
       // if (password) updateData.password = password;
       if (resume) updateData.resume = resume;
+      if (age) updateData.age = age;
   
       const candidate = await Candidate.findById(req.params.id);
   

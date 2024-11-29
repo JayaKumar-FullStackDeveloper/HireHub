@@ -71,40 +71,40 @@ const ApprovedCompany = () => {
                   initial="hidden"
                   animate="visible"
                 >
-                  <td className="py-2 px-2 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-2 border-y whitespace-nowrap text-base font-normal">
                     {index + 1}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">
                     {company.name}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.type}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.RegisterNumber}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.location}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">
                     {company.email}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.number}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.foundYear}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.city}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.state}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.pincode}
                   </td>
-                  <td className="py-2 px-3 border whitespace-nowrap text-base font-normal">
+                  <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {company.country}
                   </td>
                 </motion.tr>
