@@ -14,6 +14,7 @@ import PaidCandidates from '../pages/admin/candidates/paidCandidate';
 import UnPaidCandidates from '../pages/admin/candidates/unPaidCandidates';
 import AddCandidates from '../pages/admin/candidates/addCandidates';
 import ImportCandidates from '../pages/admin/candidates/importCandidate';
+import NotificationPage from '../pages/admin/emailNotification';
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
           { path: 'dashboard/candidates/unpaid', element: <AdminDashboard><UnPaidCandidates/></AdminDashboard> },
           { path: 'dashboard/candidates/add', element: <AdminDashboard><AddCandidates/></AdminDashboard> },
           { path: 'dashboard/candidates/import', element: <AdminDashboard><ImportCandidates/></AdminDashboard> },
+          { path: 'dashboard/notifications/email', element: <AdminDashboard><NotificationPage/></AdminDashboard> },
         ],
       },
       { path: 'auth/admin/login', element: <AdminLogin /> },

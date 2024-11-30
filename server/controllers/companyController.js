@@ -32,23 +32,55 @@ const getCompanyById = async (req, res) => {
   }
 };
 
-const updateCompany = async (req, res) => {
+const updateCompanyById = async (req, res) => {
   try {
     const { name, email, location, founded, description, status } = req.body;
-    const updatedCompany = await Company.findByIdAndUpdate(
-      req.params.id,
-      { name, email, location, founded, description, status },
-      { new: true } 
-    );
-    if (!updatedCompany) {
+
+    // Check if email already exists for another company
+    const existingCompany = await Company.findOne({
+      email,
+      _id: { $ne: req.params.id }
+    });
+
+    if (existingCompany) {
+      return res.status(400).json({ message: 'Email already exists for another company' });
+    }
+
+    // Prepare update data
+    const updateData = {};
+
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+    if (location) updateData.location = location;
+    if (founded) updateData.founded = founded;
+    if (description) updateData.description = description;
+    if (status) updateData.status = status;
+
+    // Check if the company exists
+    const company = await Company.findById(req.params.id);
+
+    if (!company) {
       return res.status(404).json({ message: 'Company not found' });
     }
 
+    // If status changed and it's "Approved", add a timestamp for when it was updated
+    if (status && status !== company.status && status === 'Approved') {
+      updateData.statusUpdatedAt = Date.now(); // Add timestamp when status is updated
+    }
+
+    // Perform the update
+    const updatedCompany = await Company.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true
+    });
+
     res.status(200).json({ message: 'Company updated successfully', company: updatedCompany });
-  } catch (err) {
-    res.status(400).json({ message: 'Error updating company', error: err.message });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 const deleteCompany = async (req, res) => {
@@ -67,6 +99,6 @@ module.exports = {
   createCompany,
   getAllCompanies,
   getCompanyById,
-  updateCompany,
+  updateCompanyById,
   deleteCompany,
 };

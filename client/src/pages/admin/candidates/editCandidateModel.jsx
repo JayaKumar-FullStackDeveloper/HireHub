@@ -6,8 +6,7 @@ import { MdSave } from "react-icons/md";
 const EditCandidateModal = ({
     selectedCandidate,
     closeEditModal,
-    setSelectedCandidate,
-    setIsEditModalOpen
+    setSelectedCandidate
 }
 
 ) => {
@@ -80,7 +79,6 @@ const EditCandidateModal = ({
       const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
-        console.log(selectedCandidate._id);
         if (selectedCandidate.resume && selectedCandidate.resume.size > 10 * 1024 * 1024) {
           alert("File size exceeds the maximum limit of 10MB.");
           return;

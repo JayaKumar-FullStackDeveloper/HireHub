@@ -5,7 +5,7 @@ const {
   createCompany,
   getAllCompanies,
   getCompanyById,
-  updateCompany,
+  updateCompanyById,
   deleteCompany,
 } = require('../controllers/companyController');
 
@@ -13,7 +13,7 @@ const {
 router.post('/create', createCompany);
 router.get('/getall', getAllCompanies);
 router.get('/:id', getCompanyById);
-router.put('/update/:id', updateCompany);
+router.put('/update/:id', updateCompanyById);
 router.delete('/:id', deleteCompany);
 
 module.exports = router;

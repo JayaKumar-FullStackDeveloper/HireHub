@@ -65,12 +65,13 @@ function AdminDashboard({ children }) {
             } bg-white h-screen flex-col transition-all duration-300`}
         >
           {/* Logo Section */}
+          <Link to='/admin'>
           <div className="flex items-center pb-4 pt-4 px-4">
             <FaHireAHelper className="text-3xl text-sky-600" />
             {!isCollapsed && (
               <h1 className="text-sky-600 text-2xl font-bold ml-2">HireHub</h1>
             )}
-          </div>
+          </div></Link>
 
           {/* Menu Section */}
           <div className="flex-1 bg-white flex flex-col justify-between">
@@ -87,7 +88,7 @@ function AdminDashboard({ children }) {
               ].map((item, index) => (
                 <li key={index} className="pb-1">
                   <button
-                    className={`flex items-center w-full px-4 py-2 justify-between text-gray-700 ${activeMenu === item.label ? "bg-blue text-white" : ""
+                    className={`flex items-center w-full px-4 py-2 justify-between text-gray-700 ${activeMenu === item.label ? "bg-blue text-white" : "hover:bg-slate-100"
                       }`}
                     onClick={() => handleMenuClick(item)}
                   >
@@ -177,14 +178,14 @@ function AdminDashboard({ children }) {
                         {[
                           {
                             label: "Email",
-                            route: "/dashboard/notifications/email",
+                            route: "/admin/dashboard/notifications/email",
                           },
                         ].map((submenu, subIndex) => (
                           <Link to={submenu.route} key={subIndex}>
                             <li
-                              className={`px-4 py-2 cursor-pointer hover:bg-gray-200 ${isActive(submenu.route)
+                              className={`px-4 py-2 cursor-pointer ${isActive(submenu.route)
                                 ? "bg-blue text-white"
-                                : ""
+                                : "hover:bg-gray-100"
                                 }`}
                             >
                               {submenu.label}
@@ -235,7 +236,7 @@ function AdminDashboard({ children }) {
                     <input
                       type="search"
                       placeholder="Search..."
-                      className="h-8 rounded-3xl w-full relative pl-4 text-sm bg-slate-200"
+                      className="h-8 rounded-3xl w-full relative pl-4 text-sm bg-slate-200 focus:outline-none p-2 border focus:ring-blue focus:border-blue"
                     />
                     <button
                       type="submit"
@@ -256,7 +257,7 @@ function AdminDashboard({ children }) {
               <span className="lg:ml-2 text-primary lg:text-xl font-bold hidden text-right w-full my-auto mr-5 sm:block">
                 {user.name}
               </span>
-            </div>{" "}
+            </div>
           </div>
          
 

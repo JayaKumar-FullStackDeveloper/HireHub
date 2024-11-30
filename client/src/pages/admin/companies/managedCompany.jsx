@@ -2,9 +2,25 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import NumberTicker from '../../../components/numberTicker';
+import { MdModeEdit } from "react-icons/md";
+import EditCompanyModel from './editCompany';
 
 const ManageCompany = ({ isCollapsed }) => {
   const [companies, setCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true); 
+
+  const openEditModal = (company) => {
+    setSelectedCompany(company);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedCompany(null);
+  };
+
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
@@ -12,11 +28,13 @@ const ManageCompany = ({ isCollapsed }) => {
         setCompanies(response.data);
       } catch (error) {
         console.error('Error fetching company data:', error);
+      } finally {
+        setLoading(false); 
       }
     };
 
     fetchCompanies();
-  }, []);
+  }, [companies]);
 
   const handleStatusChange = async (companyId, status) => {
     try {
@@ -37,6 +55,7 @@ const ManageCompany = ({ isCollapsed }) => {
   const approvedCompanies = companies.filter((company) => company.status === 'Approved').length;
   const rejectedCompanies = companies.filter((company) => company.status === 'Rejected').length;
   const pendingCompanies = companies.filter((company) => company.status === 'Pending').length;
+  const sortedData = companies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   const rowVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -82,17 +101,76 @@ const ManageCompany = ({ isCollapsed }) => {
           </div>
         </div>
 
-        {companies.length === 0 ? (
-          <p>Loading company details...</p>
+        {/* Skeleton loader while data is loading */}
+        {loading ? (
+          <div className="w-full lg:h-[630px] border-gray-300 rounded-lg relative overflow-hidden">
+            <div className="overflow-y-auto h-full border border-gray-200 rounded-md" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+              <table className="w-full bg-white border-collapse">
+                <thead className="bg-gray-200 sticky -top-0 z-50">
+                  <tr>
+                    <th className="py-3 px-2 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200 whitespace-nowrap"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200 whitespace-nowrap"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200 whitespace-nowrap"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200 whitespace-nowrap"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                    <th className="py-2 px-4 border-y bg-gray-200"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <tr key={index} className="text-center">
+                      <td className="py-3 px-2">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         ) : (
           <div className="w-full lg:h-[630px] border-gray-300 rounded-lg relative overflow-hidden">
-            <div
-              className="overflow-y-auto h-full border border-gray-200 rounded-md"
-              style={{
-                msOverflowStyle: 'none', 
-                scrollbarWidth: 'none',  
-              }}
-            >
+            <div className="overflow-y-auto h-full border border-gray-200 rounded-md" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               <table className="w-full bg-white border-collapse">
                 <thead className="bg-gray-200 sticky -top-0 z-50">
                   <tr>
@@ -109,10 +187,11 @@ const ManageCompany = ({ isCollapsed }) => {
                     <th className="py-2 px-4 border-y bg-gray-200">Pincode</th>
                     <th className="py-2 px-4 border-y bg-gray-200">Country</th>
                     <th className="py-2 px-4 border-y bg-gray-200">Status</th>
+                    <th className="py-2 px-4 border-y bg-gray-200">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {companies.map((company, index) => (
+                  {sortedData.map((company, index) => (
                     <motion.tr
                       key={company._id}
                       className="text-center hover:bg-gray-100 cursor-pointer border-y"
@@ -138,7 +217,7 @@ const ManageCompany = ({ isCollapsed }) => {
                           <>
                             <button
                               onClick={() => handleStatusChange(company._id, 'Approved')}
-                              className="px-4 py-1 bg-green-500 text-white rounded mr-2"
+                              className="px-4 py-1 bg-green-500 hover:bg-lime-500 text-white rounded mr-2"
                             >
                               Approve
                             </button>
@@ -153,6 +232,14 @@ const ManageCompany = ({ isCollapsed }) => {
                           company.status
                         )}
                       </td>
+                      <td className="py-1 px-3 border-y whitespace-nowrap text-base font-normal">
+                        <div
+                          className="text-amber-900 flex border-2 py-1 px-4 hover:border-orange-800 hover:bottom-2 font-medium rounded-md"
+                          onClick={() => openEditModal(company)}
+                        >
+                          <MdModeEdit className='pr-1 flex self-center text-lg' /> Edit
+                        </div>
+                      </td>
                     </motion.tr>
                   ))}
                 </tbody>
@@ -160,9 +247,15 @@ const ManageCompany = ({ isCollapsed }) => {
             </div>
           </div>
         )}
+        {isEditModalOpen && selectedCompany && (
+          <EditCompanyModel
+            selectedCompany={selectedCompany}
+            setSelectedCompany={setSelectedCompany}
+            closeEditModal={closeEditModal}
+          />
+        )}
       </div>
     </div>
-
   );
 };
 

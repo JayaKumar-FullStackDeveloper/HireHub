@@ -21,6 +21,8 @@ const UnPaidCandidates = ({ isCollapsed }) => {
     resume: null
   });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true); 
+
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -29,6 +31,8 @@ const UnPaidCandidates = ({ isCollapsed }) => {
         setCandidates(response.data);
       } catch (error) {
         console.error('Error fetching candidate data:', error);
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -70,9 +74,6 @@ const UnPaidCandidates = ({ isCollapsed }) => {
         <h1 className="text-2xl font-bold text-left">Unpaid Candidates List</h1>
         <ExportToExcel data={unPaidOnly} fileName="Unpaid_Candidates_List" />
       </div>
-      {unPaidOnly.length === 0 ? (
-        <p>Loading candidates details...</p>
-      ) : (
         <div className="w-full h-[560px] overflow-scroll scrollbar-hide border border-gray-300 rounded-lg mt-2" style={{
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
@@ -96,7 +97,22 @@ const UnPaidCandidates = ({ isCollapsed }) => {
               </tr>
             </thead>
             <tbody>
-            {unPaidOnly.map((user, index) => (
+               {/* Loading Skeleton */}
+            {loading &&
+              Array.from({ length: 5 }).map((_, index) => (
+                <tr key={index}>
+                  {Array.from({ length: 14 }).map((_, colIndex) => (
+                    <td
+                      key={colIndex}
+                      className="py-2 px-2 border-y text-center"
+                    >
+                      <div className="animate-pulse h-4 bg-gray-300 rounded"></div>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+              {!loading &&
+            unPaidOnly.map((user, index) => (
                 <motion.tr
                   key={user._id}
                   className="text-center hover:bg-gray-100 cursor-pointer"
@@ -138,7 +154,7 @@ const UnPaidCandidates = ({ isCollapsed }) => {
                   </td>
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     <div
-                      className="text-amber-900 flex border-rose-700  border-2 py-1 px-2 font-medium rounded-md" onClick={() => openEditModal(user)}
+                      className="text-amber-900 flex  border-2 py-1 px-4 hover:border-orange-800 hover:bottom-2 font-medium rounded-md" onClick={() => openEditModal(user)}
                     >
                       <MdModeEdit className='pr-1 flex self-center text-lg' /> Edit
                     </div>
@@ -148,7 +164,6 @@ const UnPaidCandidates = ({ isCollapsed }) => {
             </tbody>
           </table>
         </div>
-      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
