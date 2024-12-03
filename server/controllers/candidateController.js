@@ -1,9 +1,26 @@
+const Admin = require('../models/adminModels');
 const Candidate = require('../models/candidateModels');
 const bcrypt = require('bcryptjs');
 
+const logAdminActivity = async (adminId, action) => {
+  try {
+    const admin = await Admin.findById(adminId);
+    if (admin) {
+      admin.activities.push({ action, timestamp: new Date() });
+      await admin.save();
+      console.log(`Activity logged for Admin ID ${adminId}: ${action}`);
+    } else {
+      console.log('Admin not found for logging activity');
+    }
+  } catch (error) {
+    console.error('Error logging activity:', error);
+  }
+};
+
+
 const  createCandidate = async (req, res) => {
   try {
-    const { fullName, email, dob, gender,age, mobileNumber, qualification, passedOut, password } = req.body;
+    const { fullName, email, dob, gender,age, mobileNumber, qualification, passedOut, password, adminId } = req.body;
 
     const existingCandidate = await Candidate.findOne({ $or: [{ email }, { mobileNumber }] });
     if (existingCandidate) {
@@ -24,6 +41,11 @@ const  createCandidate = async (req, res) => {
       password,
       resume,
     });
+    if (adminId) {
+      logAdminActivity(adminId, `Created candidate with email ${email} for ${fullName}`);
+    } else {
+      console.log('No adminId found in request');
+    }
     await candidate.save();
     res.status(201).json({ message: 'Candidate created successfully', candidate });
   } catch (error) {
@@ -35,7 +57,7 @@ const  createCandidate = async (req, res) => {
 
 const updateCandidateById = async (req, res) => {
     try {
-      const { fullName, email, dob, gender, mobileNumber, qualification, passedOut, paymentStatus,age } = req.body;
+      const { fullName, email, dob, gender, mobileNumber, qualification, passedOut, paymentStatus,age , adminId} = req.body;
   
       const resume = req.file ? req.file.path : null;
   
@@ -75,7 +97,11 @@ const updateCandidateById = async (req, res) => {
       const updatedCandidate = await Candidate.findByIdAndUpdate(req.params.id, updateData, {
         new: true, runValidators: true
       });
-  
+      if (adminId) {
+        logAdminActivity(adminId, `Updated candidate with email ${email} for ${fullName}`);
+      } else {
+        console.log('No adminId found in request');
+      }   
       res.status(200).json({ message: 'Candidate updated successfully', candidate: updatedCandidate });
     } catch (error) {
       console.error(error);
@@ -90,7 +116,8 @@ const deleteCandidateById = async (req, res) => {
       if (!candidate) {
         return res.status(404).json({ message: 'Candidate not found' });
       }
-  
+      const adminId = req.adminId; 
+      logAdminActivity(adminId, `Deleted candidate with ID ${req.params.id}`);
       res.status(200).json({ message: 'Candidate deleted successfully' });
     } catch (error) {
       console.error(error);
@@ -112,4 +139,4 @@ const deleteCandidateById = async (req, res) => {
       return res.status(500).json({ message: 'Server error' });
     }
   };
-module.exports={ createCandidate,updateCandidateById , deleteCandidateById, getAllCandidates}
+module.exports={ createCandidate,updateCandidateById , deleteCandidateById, getAllCandidates, logAdminActivity}

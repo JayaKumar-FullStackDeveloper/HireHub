@@ -19,11 +19,11 @@ function AdminDashboard({ children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const { user, logout } = useAuth();
-  const location = useLocation();
+  const location = useLocation(); 
   const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
-
+  
   useEffect(() => {
     if (location.pathname === "/admin") {
       setActiveMenu("Dashboard");
@@ -125,6 +125,14 @@ function AdminDashboard({ children }) {
                           {
                             label: "Import Candidates",
                             route: "/admin/dashboard/candidates/import",
+                          },
+                          {
+                            label: "Internship",
+                            route: "/admin/dashboard/candidates/Intern",
+                          },
+                          {
+                            label: "Jobs",
+                            route: "/admin/dashboard/candidates/Jobs",
                           },
                         ].map((submenu, subIndex) => (
                           <Link to={submenu.route} key={subIndex}>
@@ -262,7 +270,7 @@ function AdminDashboard({ children }) {
          
 
           <div className="bg-gray-100 w-full h-screen rounded-tl-3xl p-2 overflow-y-auto">
-          {React.cloneElement(children, { isCollapsed })}</div>
+          {React.cloneElement(children, { isCollapsed , user })}</div>
         </div>
       </div>
     </>

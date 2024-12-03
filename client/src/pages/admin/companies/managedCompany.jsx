@@ -4,13 +4,15 @@ import { motion } from 'framer-motion';
 import NumberTicker from '../../../components/numberTicker';
 import { MdModeEdit } from "react-icons/md";
 import EditCompanyModel from './editCompany';
+import { useAuth } from '../../../components/AuthProvider';
 
 const ManageCompany = ({ isCollapsed }) => {
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [loading, setLoading] = useState(true); 
-
+  const {user}= useAuth()
+  const adminId = user.id ;
   const openEditModal = (company) => {
     setSelectedCompany(company);
     setIsEditModalOpen(true);
@@ -39,7 +41,7 @@ const ManageCompany = ({ isCollapsed }) => {
   const handleStatusChange = async (companyId, status) => {
     try {
       await axios.put(`http://localhost:4000/api/companies/update/${companyId}`, {
-        status: status,
+        status: status, adminId : adminId
       });
       setCompanies(
         companies.map((company) =>

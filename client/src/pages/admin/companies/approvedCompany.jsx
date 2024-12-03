@@ -9,7 +9,7 @@ const ApprovedCompany = () => {
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);  // New loading state
+  const [loading, setLoading] = useState(true);  
 
   const openEditModal = (company) => {
     setSelectedCompany(company);
@@ -34,7 +34,7 @@ const ApprovedCompany = () => {
     };
 
     fetchCompanies();
-  }, []);
+  }, [companies]);
 
   const approvedCompanies = companies.filter((company) => company.status === 'Approved');
   const sortedData = approvedCompanies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));

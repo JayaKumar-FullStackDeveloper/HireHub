@@ -5,6 +5,7 @@ const {createCandidate,
     deleteCandidateById,
     getAllCandidates
 } = require('../controllers/candidateController');
+
 const upload = require('../config/multerConfig'); 
 
 router.post('/create', upload.single('resume'),createCandidate);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { MdSave } from "react-icons/md";
+import { useAuth } from '../../../components/AuthProvider';
 
 
 const EditCandidateModal = ({
@@ -18,6 +19,7 @@ const EditCandidateModal = ({
         passedOut: "",
         dob: "",
       });
+      const { user } = useAuth();
     
       const handleInputChange = (e) => {
         const { name, value, files } = e.target;
@@ -88,7 +90,8 @@ const EditCandidateModal = ({
         Object.entries(selectedCandidate).forEach(([key, value]) =>
           formData.append(key, value)
         );
-    
+        const adminId = user.id 
+        formData.append('adminId', adminId);
         try {
           const response = await axios.put(
             `http://localhost:4000/api/candidate/update/${selectedCandidate._id}`,

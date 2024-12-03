@@ -19,7 +19,8 @@ const PaidCandidates = ({ isCollapsed }) => {
     qualification: '',
     passedOut: '',
     age: '',
-    resume: null
+    resume: null,
+    adminId: ''
   });
   const [loading, setLoading] = useState(true); 
 

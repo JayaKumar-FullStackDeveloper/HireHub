@@ -1,6 +1,15 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
+const activitySchema = new mongoose.Schema({
+  action: {
+    type: String,
+    required: true, 
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now, 
+  },
+});
 const adminSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -19,7 +28,8 @@ const adminSchema = new mongoose.Schema({
   role:{
     type:String,
     default:'admin'
-  }
+  },
+  activities: [activitySchema]
 }, {
   timestamps: true,
 });

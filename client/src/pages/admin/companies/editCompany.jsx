@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { MdSave } from "react-icons/md";
+import { useAuth } from '../../../components/AuthProvider';
 
 const EditCompanyModal = ({ selectedCompany, closeEditModal, setSelectedCompany }) => {
   const [errorMessages, setErrorMessages] = useState({
@@ -9,6 +10,7 @@ const EditCompanyModal = ({ selectedCompany, closeEditModal, setSelectedCompany 
     pincode: "",
     foundYear: "",
   });
+  const { user } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -62,7 +64,8 @@ const EditCompanyModal = ({ selectedCompany, closeEditModal, setSelectedCompany 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-  
+    const adminId = user.id 
+    selectedCompany.adminId = adminId; 
     try {
       const response = await axios.put(
         `http://localhost:4000/api/companies/update/${selectedCompany._id}`,

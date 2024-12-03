@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { GrFormAdd } from "react-icons/gr";
+import { useAuth } from "../../../components/AuthProvider";
+
 
 const AddCandidates = ({ isCollapsed }) => {
   const getCurrentDateTime = () => {
     const now = new Date();
     return now.toISOString();
   };
-
+  const { user } = useAuth();
   const [candidateData, setCandidateData] = useState({
     fullName: "",
     email: "",
@@ -100,14 +102,16 @@ const AddCandidates = ({ isCollapsed }) => {
     Object.entries(candidateData).forEach(([key, value]) =>
       formData.append(key, value)
     );
-  
+    const adminId = user.id 
+    formData.append('adminId', adminId);    
     try {
       setLoading(true);
       const response = await axios.post(
         "http://localhost:4000/api/candidate/create",
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        { headers: { "Content-Type": "multipart/form-data" }, }
       );
+      
       if (response.status === 201) {
         alert("Candidate added successfully!");
         setCandidateData({

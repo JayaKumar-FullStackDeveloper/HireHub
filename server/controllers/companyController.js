@@ -1,3 +1,4 @@
+const adminModels = require('../models/adminModels');
 const Company = require('../models/companyModel');
 
 const createCompany = async (req, res) => {
@@ -11,6 +12,20 @@ const createCompany = async (req, res) => {
       }
 };
 
+const logAdminActivity = async (adminId, action) => {
+  try {
+    const admin = await adminModels.findById(adminId);
+    if (admin) {
+      admin.activities.push({ action, timestamp: new Date() });
+      await admin.save();
+      console.log(`Activity logged for Admin ID ${adminId}: ${action}`);
+    } else {
+      console.log('Admin not found for logging activity');
+    }
+  } catch (error) {
+    console.error('Error logging activity:', error);
+  }
+};
 const getAllCompanies = async (req, res) => {
   try {
     const companies = await Company.find();
@@ -34,9 +49,8 @@ const getCompanyById = async (req, res) => {
 
 const updateCompanyById = async (req, res) => {
   try {
-    const { name, email, location, founded, description, status } = req.body;
+    const { name, email, location, founded, description, status,pincode , adminId } = req.body;
 
-    // Check if email already exists for another company
     const existingCompany = await Company.findOne({
       email,
       _id: { $ne: req.params.id }
@@ -53,6 +67,7 @@ const updateCompanyById = async (req, res) => {
     if (email) updateData.email = email;
     if (location) updateData.location = location;
     if (founded) updateData.founded = founded;
+    if (pincode) updateData.pincode = pincode;
     if (description) updateData.description = description;
     if (status) updateData.status = status;
 
@@ -73,6 +88,11 @@ const updateCompanyById = async (req, res) => {
       new: true,
       runValidators: true
     });
+    if (adminId) {
+      logAdminActivity(adminId, `Updated Company details of ${company.name}`);
+    } else {
+      console.log('No adminId found in request');
+    }
 
     res.status(200).json({ message: 'Company updated successfully', company: updatedCompany });
   } catch (error) {
