@@ -5,6 +5,7 @@ import NumberTicker from '../../../components/numberTicker';
 import { MdModeEdit } from "react-icons/md";
 import EditCompanyModel from './editCompany';
 import { useAuth } from '../../../components/AuthProvider';
+import CustomAlert from '../../../components/customAlert';
 
 const ManageCompany = ({ isCollapsed }) => {
   const [companies, setCompanies] = useState([]);
@@ -12,6 +13,13 @@ const ManageCompany = ({ isCollapsed }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [loading, setLoading] = useState(true); 
   const {user}= useAuth()
+  const [alert, setAlert] = useState({ type: "", message: "" });
+    useEffect(() => {
+        if (alert.message) {
+          const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+          return () => clearTimeout(timer); 
+        }
+      }, [alert]);
   const adminId = user.id ;
   const openEditModal = (company) => {
     setSelectedCompany(company);
@@ -43,13 +51,17 @@ const ManageCompany = ({ isCollapsed }) => {
       await axios.put(`http://localhost:4000/api/companies/update/${companyId}`, {
         status: status, adminId : adminId
       });
+      setAlert({ type: "success", message: `Company ${status} Successfully!`});
       setCompanies(
         companies.map((company) =>
           company._id === companyId ? { ...company, status: status } : company
-        )
-      );
+      )
+    );
+    setTimeout(() => {
+      closeEditModal();
+    }, 2000);
     } catch (error) {
-      console.error('Error updating company status:', error);
+      setAlert({ type: "error", message: `Error updating company status: ${error}`});
     }
   };
 
@@ -72,6 +84,13 @@ const ManageCompany = ({ isCollapsed }) => {
     <div className="w-full">
       <div className={`mx-auto ${isCollapsed ? 'max-w-7xl' : 'max-w-6xl'}`}>
         <h1 className="text-xl font-bold mb-4 text-left">Manage Companies Application</h1>
+        {alert.message && (
+                <CustomAlert
+          severity={alert.type}
+          message={alert.message}
+          className='z-50 absolute right-4 top-2'
+        />
+      )}
         <div className="flex justify-between mb-4 gap-20">
           <div className="bg-blue-100 flex flex-col p-4 rounded shadow-md w-1/4 text-center bg-cyan-50">
             <div className="flex justify-evenly">
@@ -108,7 +127,7 @@ const ManageCompany = ({ isCollapsed }) => {
           <div className="w-full lg:h-[630px] border-gray-300 rounded-lg relative overflow-hidden">
             <div className="overflow-y-auto h-full border border-gray-200 rounded-md" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               <table className="w-full bg-white border-collapse">
-                <thead className="bg-gray-200 sticky -top-0 z-50">
+                <thead className="bg-gray-200 sticky -top-0 z-30">
                   <tr>
                     <th className="py-3 px-2 border-y bg-gray-200"></th>
                     <th className="py-2 px-4 border-y bg-gray-200 whitespace-nowrap"></th>
@@ -174,7 +193,7 @@ const ManageCompany = ({ isCollapsed }) => {
           <div className="w-full lg:h-[630px] border-gray-300 rounded-lg relative overflow-hidden">
             <div className="overflow-y-auto h-full border border-gray-200 rounded-md" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
               <table className="w-full bg-white border-collapse">
-                <thead className="bg-gray-200 sticky -top-0 z-50">
+                <thead className="bg-gray-200 sticky -top-0 z-30">
                   <tr>
                     <th className="py-3 px-2 border-y bg-gray-200">S.No</th>
                     <th className="py-2 px-4 border-y bg-gray-200 whitespace-nowrap">Company Name</th>
@@ -196,7 +215,7 @@ const ManageCompany = ({ isCollapsed }) => {
                   {sortedData.map((company, index) => (
                     <motion.tr
                       key={company._id}
-                      className="text-center hover:bg-gray-100 cursor-pointer border-y"
+                      className="text-center hover:bg-gray-100 cursor-pointer border-b"
                       custom={index}
                       variants={rowVariants}
                       initial="hidden"

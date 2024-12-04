@@ -24,7 +24,7 @@ const DashboardOverview = ({ user, isCollapsed }) => {
     visible: (i) => ({
       opacity: 1,
       y: 0,
-      transition: { delay: i * 0.1 },
+      transition: { delay: i * 0.4 },
     }),
   };
 
@@ -201,9 +201,9 @@ const DashboardOverview = ({ user, isCollapsed }) => {
         <div className="flex w-full gap-2">
           {/* Recent Activities Section */}
           <motion.div className="bg-white shadow-md rounded-lg p-2 w-8/12"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}>
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}>
             <div className="flex gap-2 self-center w-full mb-4 pl-2">
               <img src="images/recent.png" className="w-7 h-7 self-center" alt="img" />
               <h3 className="text-xl font-medium font-kanit text-sky-900 text-left self-center">Recent Activities</h3>
@@ -231,10 +231,10 @@ const DashboardOverview = ({ user, isCollapsed }) => {
             )}
           </motion.div>
           {/* Weekly Activities Section */}
-          <motion.div className="w-4/12" 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }} >
+          <motion.div className="w-4/12"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }} >
             <AdminActivityGraph userId={user.id} />
           </motion.div>
         </div>
@@ -287,10 +287,10 @@ const DashboardOverview = ({ user, isCollapsed }) => {
                 transition={{ delay: index * 0.2 }}
               >
                 <div className="flex flex-col">
-                  <h3 className="font-medium text-lg font-poppins text-cyan-950 text-left">
+                  <h3 className="font-medium font-lato text-base text-gray-950 text-left">
                     <span>{company.name}</span>
                   </h3>
-                  <p className="text-sm text-slate-950  flex">
+                  <p className="text-sm text-slate-950 font-normal flex">
                     Current Status:
                     <span
                       className={` text-sm font-medium pl-2 self-center ${company.details === "Pending"

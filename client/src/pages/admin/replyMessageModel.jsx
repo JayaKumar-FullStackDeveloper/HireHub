@@ -1,46 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { IoMdSend } from "react-icons/io";
 import { ImCross } from "react-icons/im";
+import CustomAlert from "../../components/customAlert";
 
 
 
 const ReplyMessageModel = ({ selectedNotification, closeModal, refreshNotifications }) => {
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState({ type: "", message: "" });
+  useEffect(() => {
+      if (alert.message) {
+        const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+        return () => clearTimeout(timer); 
+      }
+    }, [alert]);
 
   const userProfile = "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?t=st=1732953846~exp=1732957446~hmac=6a413d11de07736d45d3c36550ee1e1787a2ebad78cd525125b55e6ae793368d&w=740";
   // const adminProfile = "https://via.placeholder.com/150?text=Admin";
 
   const handleSend = async () => {
     if (!reply.trim()) {
-      alert("Reply cannot be empty!");
+      setAlert({ type: "info", message: "Reply cannot be empty! Enter Reply Messages.."});
       return;
     }
 
     try {
-      setLoading(true); // Show a loading state
+      setLoading(true); 
       const response = await axios.post(
         `http://localhost:4000/api/admin/reply/${selectedNotification._id}`,
         { reply }
       );
 
       if (response.status === 200) {
-        alert("Reply sent successfully!");
-        setReply(""); // Clear the input field
-        closeModal(); // Close the modal
-        if (refreshNotifications) refreshNotifications(); // Refresh notifications list
+        setAlert({ type: "success", message: "Reply message was sended successfully!"});
+        setReply("");
+        setTimeout(()=>{
+          closeModal();
+        },2000)
+        if (refreshNotifications) refreshNotifications(); 
       }
     } catch (error) {
-      console.error("Error sending reply:", error);
-      alert("Failed to send reply. Please try again.");
+      if (error.response?.data?.message) {
+        setAlert({ type: "error", message: `Error sending reply: ${ error.response.data.message }`});
+    } else {
+        setAlert({ type: "error", message: "Failed to send reply. Please try again." });
+    }
     } finally {
       setLoading(false); 
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
+       {alert.message && (
+                <CustomAlert
+          severity={alert.type}
+          message={alert.message}
+          className='z-50 absolute right-4 top-4'
+        />
+      )}
       <div className="bg-white w-11/12 max-w-md rounded-lg shadow-lg flex flex-col justify-between">
         {/* Modal Header */}
         <div className="flex items-center gap-4 p-2 bg-gray-100 border-b">
@@ -96,6 +116,7 @@ const ReplyMessageModel = ({ selectedNotification, closeModal, refreshNotificati
             rows="1"
             style={{ resize: "none" }}
             disabled={loading}
+            required
           />
           <button
             onClick={handleSend}

@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdSave } from "react-icons/md";
 import { useAuth } from '../../../components/AuthProvider';
+import CustomAlert from '../../../components/customAlert';
 
 
 const EditCandidateModal = ({
@@ -19,6 +20,13 @@ const EditCandidateModal = ({
         passedOut: "",
         dob: "",
       });
+      const [alert, setAlert] = useState({ type: "", message: "" });
+      useEffect(() => {
+        if (alert.message) {
+          const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+          return () => clearTimeout(timer); 
+        }
+      }, [alert]);
       const { user } = useAuth();
     
       const handleInputChange = (e) => {
@@ -80,55 +88,65 @@ const EditCandidateModal = ({
     
       const handleSubmit = async (e) => {
         e.preventDefault();
+    
         if (!validateForm()) return;
+    
         if (selectedCandidate.resume && selectedCandidate.resume.size > 10 * 1024 * 1024) {
-          alert("File size exceeds the maximum limit of 10MB.");
-          return;
+            setAlert({ type: "warning", message: "File size exceeds the maximum limit of 10MB." });
+            return;
         }
     
         const formData = new FormData();
-        Object.entries(selectedCandidate).forEach(([key, value]) =>
-          formData.append(key, value)
-        );
-        const adminId = user.id 
-        formData.append('adminId', adminId);
-        try {
-          const response = await axios.put(
-            `http://localhost:4000/api/candidate/update/${selectedCandidate._id}`,
-            formData, { headers: { "Content-Type": "multipart/form-data" } }
-          );
-          closeEditModal()
-          if (response.status === 201) {
-            alert("Candidate added successfully!");
-            setSelectedCandidate({
-              fullName: "",
-              email: "",
-              mobileNumber: "",
-              dob: "",
-              gender: "",
-              qualification: "",
-              passedOut: "",
-              resume: null,
-              age: "",
-            });
-            setErrorMessages({})
-        }
-        } catch (error) {
-          console.error("Error submitting candidate data:", error);
+        Object.entries(selectedCandidate).forEach(([key, value]) => formData.append(key, value));
+        const adminId = user.id;
+        formData.append("adminId", adminId);
     
-          if (error.response && error.response.data && error.response.data.message) {
-            alert(error.response.data.message);
-          } else {
-            alert("There was an error submitting the candidate data.");
-          }
+        try {
+            const response = await axios.put(
+                `http://localhost:4000/api/candidate/update/${selectedCandidate._id}`,
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+    
+            setAlert({ type: "success", message: "Candidate updated successfully!" });
+            if (response.status === 201) {
+                setSelectedCandidate({
+                    fullName: "",
+                    email: "",
+                    mobileNumber: "",
+                    dob: "",
+                    gender: "",
+                    qualification: "",
+                    passedOut: "",
+                    resume: null,
+                    age: "",
+                });
+                setErrorMessages({});
+            }
+            setTimeout(() => {
+                closeEditModal();
+              }, 2000);
+        } catch (error) {
+            console.error("Error submitting candidate data:", error);
+            if (error.response?.data?.message) {
+                setAlert({ type: "error", message: error.response.data.message });
+            } else {
+                setAlert({ type: "error", message: "There was an error submitting the candidate data." });
+            }
         }
-      };
-
+    };
 
     return (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
             <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-2xl">
                 <h1 className="text-2xl font-bold mb-2 text-left">Edit Candidate</h1>
+                {alert.message && (
+                <CustomAlert
+          severity={alert.type}
+          message={alert.message}
+          className='z-50 absolute right-4 top-4'
+        />
+      )}
                 <form onSubmit={handleSubmit} className="space-y-6 p-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Candidate Name */}

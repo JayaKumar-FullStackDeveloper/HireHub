@@ -5,6 +5,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../components/AuthProvider';
 import { FaHireAHelper } from "react-icons/fa";
+import CustomAlert from '../../components/customAlert';
 
 function AdminLogin() {
     const { login } = useAuth();
@@ -13,6 +14,13 @@ function AdminLogin() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [alert, setAlert] = useState({ type: "", message: "" });
+    useEffect(() => {
+        if (alert.message) {
+          const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+          return () => clearTimeout(timer); 
+        }
+      }, [alert]);
 
     const handleOnChange = (e) => {
         const { name, value } = e.target;
@@ -34,12 +42,12 @@ function AdminLogin() {
             setError('Email is required');
             return false;
         }
-        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
             setError('Enter a valid email');
             return false;
         }
-        if (!formData.password) {
-            setError('Password is required');
+        if (!/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(formData.password)){
+            setError('Enter a valid Password');
             return false;
         }
         return true;
@@ -57,10 +65,17 @@ function AdminLogin() {
                 headers: { Authorization: `Bearer ${response.data.token}` },
             });
             login(userResponse.data, response.data.token);
-            console.log('Login Successful');
-            navigate('/admin');
-        } catch (err) {
-            setError(err.response?.data?.message || 'An error occurred. Please try again.');
+            setAlert({ type: "success", message: `Login Successfully! Redirect to Dashboard.`});
+            setTimeout(() => {
+                navigate('/admin');
+              }, 2000);
+            
+        } catch (error) {
+            if (error.response?.data?.message) {
+                setAlert({ type: "error", message: error.response.data.message });
+            } else {
+                setAlert({ type: "error", message: "An error occurred to Login. Please try again." });
+            }
         } finally {
             setLoading(false);
         }
@@ -71,7 +86,14 @@ function AdminLogin() {
     };
 
     return (
-        <div className="w-full h-screen flex bg-cyan-50 bg-opacity-40">
+        <div className="w-full h-screen relative flex bg-cyan-50 bg-opacity-40">
+                {alert.message && (
+                <CustomAlert
+          severity={alert.type}
+          message={alert.message}
+          className='z-50 absolute right-4 top-4'
+        />
+      )} 
             <div className="w-1/2 h-full flex items-center justify-center">
                 <div className="relative w-96 h-4/5 overflow-hidden rounded-lg">
                     {images.map((image, index) => (

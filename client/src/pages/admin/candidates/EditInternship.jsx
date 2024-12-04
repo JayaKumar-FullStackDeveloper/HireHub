@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdSave } from "react-icons/md";
 import { useAuth } from '../../../components/AuthProvider';
+import CustomAlert from '../../../components/customAlert';
 
 
 const EditInternship = ({
@@ -12,7 +13,13 @@ const EditInternship = ({
 
 ) => {
     const { user } = useAuth();
-
+    const [alert, setAlert] = useState({ type: "", message: "" });
+    useEffect(() => {
+        if (alert.message) {
+          const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+          return () => clearTimeout(timer); 
+        }
+      }, [alert]);
     const [errorMessages, setErrorMessages] = useState({
         email: "",
         contactNumber: "",
@@ -61,7 +68,7 @@ const EditInternship = ({
         e.preventDefault();
         if (!validateForm()) return;
         if (selectedInternship.resume && selectedInternship.resume.size > 10 * 1024 * 1024) {
-            alert("File size exceeds the maximum limit of 10MB.");
+            setAlert({ type: "warning", message: "File size exceeds the maximum limit of 10MB." });
             return;
         }
 
@@ -76,9 +83,8 @@ const EditInternship = ({
                 `http://localhost:4000/api/intern/update/${selectedInternship._id}`,
                 formData, { headers: { "Content-Type": "multipart/form-data" } }
             );
-            closeEditModal()
             if (response.status === 201) {
-                alert("Candidate added successfully!");
+                setAlert({ type: "success", message:"Intership added successfully!"});
                 setSelectedInternship({
                     firstName: "",
                     lastName: "",
@@ -90,20 +96,29 @@ const EditInternship = ({
                 });
                 setErrorMessages({})
             }
+            setTimeout(() => {
+                closeEditModal();
+              }, 2000);
         } catch (error) {
             console.error("Error submitting candidate data:", error);
-
             if (error.response && error.response.data && error.response.data.message) {
-                alert(error.response.data.message);
+                setAlert({ type: "error", message: error.response.data.message});
             } else {
-                alert("There was an error submitting the candidate data.");
+                setAlert({ type: "error", message:"There was an error submitting the Internship data."});
             }
         }
     };
 
 
     return (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
+             {alert.message && (
+                <CustomAlert
+          severity={alert.type}
+          message={alert.message}
+          className='z-50 absolute right-4 top-4'
+        />
+      )}
             <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-2xl">
                 <h1 className="text-2xl font-bold mb-2 text-left">Edit Candidate</h1>
                 <form onSubmit={handleSubmit} className="space-y-6 p-6">

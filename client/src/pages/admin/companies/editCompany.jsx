@@ -1,7 +1,8 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdSave } from "react-icons/md";
 import { useAuth } from '../../../components/AuthProvider';
+import CustomAlert from '../../../components/customAlert';
 
 const EditCompanyModal = ({ selectedCompany, closeEditModal, setSelectedCompany }) => {
   const [errorMessages, setErrorMessages] = useState({
@@ -11,6 +12,13 @@ const EditCompanyModal = ({ selectedCompany, closeEditModal, setSelectedCompany 
     foundYear: "",
   });
   const { user } = useAuth();
+  const [alert, setAlert] = useState({ type: "", message: "" });
+    useEffect(() => {
+        if (alert.message) {
+          const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+          return () => clearTimeout(timer); 
+        }
+      }, [alert]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -78,19 +86,32 @@ const EditCompanyModal = ({ selectedCompany, closeEditModal, setSelectedCompany 
       );
   
       if (response.status === 200) {
-        alert("Company updated successfully!");
-        closeEditModal();
+        setAlert({ type: "success", message: "Company Details updated successfully!"});
+        setTimeout(() => {
+          closeEditModal();
+        }, 2000);
       }
     } catch (error) {
       console.error("Error updating company data:", error);
-      alert("There was an error updating the company data.");
-    }
+      if (error.response?.data?.message) {
+        setAlert({ type: "error", message: error.response.data.message });
+    } else {
+        setAlert({ type: "error", message: "There was an error submitting the company data." });
+    }    
+  }
   };
   
 
   return (
-    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
       <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-2xl">
+      {alert.message && (
+                <CustomAlert
+          severity={alert.type}
+          message={alert.message}
+          className='z-50 absolute right-4 top-4'
+        />
+      )}
         <h1 className="text-2xl font-bold mb-2 text-left">Edit Company</h1>
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

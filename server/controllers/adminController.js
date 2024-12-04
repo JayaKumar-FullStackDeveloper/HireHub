@@ -4,6 +4,8 @@ const Candidate = require('../models/candidateModels');
 const JobsApplication = require('../models/jobsModel');
 const InternshipApplication = require('../models/InternshipModel');
 const { generateToken } = require('../utils/jwtUtils');
+const bcrypt = require('bcryptjs');
+
 const registerAdmin = async (req, res) => {
   try {
     console.log('Request Body:', req.body); 
@@ -105,6 +107,34 @@ const getWeeklyActivities = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+const updatePassword = async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  try {
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin not found' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters long' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    admin.password = hashedPassword;
+    const updatedAdmin = await Admin.findByIdAndUpdate(
+      admin._id,
+      {
+        password: hashedPassword,
+      },
+      { new: true }
+    );
+    console.log("Updated Admin: ", updatedAdmin);
+    return res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
 
 const getDashboardStats = async (req, res) => {
   try {
@@ -158,5 +188,6 @@ module.exports = {
   getAdminProfile,
   getRecentActivities,
   getWeeklyActivities,
-  getDashboardStats
+  getDashboardStats,
+  updatePassword
 };

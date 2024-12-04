@@ -6,6 +6,7 @@ const {
   getRecentActivities,
   getWeeklyActivities,
   getDashboardStats,
+  updatePassword,
   } = require('../controllers/adminController');
 const { protectAdmin } = require('../middleware/adminMiddleware');
 const { getAllNotifications, replyToNotification, createNotification } = require('../controllers/notificationController');
@@ -13,6 +14,7 @@ const { getAllNotifications, replyToNotification, createNotification } = require
 const router = express.Router();
 
 router.post('/register', registerAdmin);
+router.post('/update', updatePassword);
 router.post('/login', loginAdmin);
 router.get('/notification', getAllNotifications)
 router.get('/recently/:id', getRecentActivities)

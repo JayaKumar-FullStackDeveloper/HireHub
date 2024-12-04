@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { GrFormAdd } from "react-icons/gr";
 import dayjs from "dayjs";
 import { useAuth } from "../../../components/AuthProvider";
+import CustomAlert from "../../../components/customAlert";
 
 
 const AddCandidates = ({ isCollapsed }) => {
   const getCurrentDateTime = () => {
     const now = new Date();
-    return now.toISOString();
+    return now.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
   };
+
   const { user } = useAuth();
   const [candidateData, setCandidateData] = useState({
     fullName: "",
@@ -24,13 +26,8 @@ const AddCandidates = ({ isCollapsed }) => {
     joiningDate: getCurrentDateTime(),
   });
 
-  const [errorMessages, setErrorMessages] = useState({
-    email: "",
-    mobileNumber: "",
-    age: "",
-    passedOut: "",
-    dob: "",
-  });
+  const [errorMessages, setErrorMessages] = useState({});
+  const [alert, setAlert] = useState({ type: "", message: "" });
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
@@ -52,10 +49,8 @@ const AddCandidates = ({ isCollapsed }) => {
   const validateYear = (year) => {
     const yearValid = /^\d{4}$/.test(year);
     if (!yearValid) return false;
-
     const selectedYear = parseInt(year, 10);
     const currentYear = dayjs().year();
-
     return selectedYear < currentYear;
   };
 
@@ -63,10 +58,8 @@ const AddCandidates = ({ isCollapsed }) => {
     if (!dob || dob === "0001-01-01" || dob.trim() === "") {
       return false;
     }
-
     const selectedYear = dayjs(dob).year();
     const currentYear = dayjs().year();
-
     return selectedYear < currentYear;
   };
 
@@ -98,9 +91,7 @@ const AddCandidates = ({ isCollapsed }) => {
 
     setErrorMessages({
       email: emailValid ? "" : "Please enter a valid email address.",
-      mobileNumber: numberValid
-        ? ""
-        : "Please enter a valid 10-digit mobile number.",
+      mobileNumber: numberValid ? "" : "Please enter a valid 10-digit mobile number.",
       age: ageValid ? "" : "Age must be a valid two-digit number.",
       passedOut: yearValid
         ? ""
@@ -110,12 +101,13 @@ const AddCandidates = ({ isCollapsed }) => {
 
     return emailValid && numberValid && ageValid && yearValid && dobValid;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     if (candidateData.resume && candidateData.resume.size > 10 * 1024 * 1024) {
-      alert("File size exceeds the maximum limit of 10MB.");
+      setAlert({ type: "error", message: "File size exceeds the maximum limit of 10MB." });
       return;
     }
 
@@ -123,18 +115,19 @@ const AddCandidates = ({ isCollapsed }) => {
     Object.entries(candidateData).forEach(([key, value]) =>
       formData.append(key, value)
     );
-    const adminId = user.id
-    formData.append('adminId', adminId);
+    const adminId = user.id;
+    formData.append("adminId", adminId);
+
     try {
       setLoading(true);
       const response = await axios.post(
         "http://localhost:4000/api/candidate/create",
         formData,
-        { headers: { "Content-Type": "multipart/form-data" }, }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       if (response.status === 201) {
-        alert("Candidate added successfully!");
+        setAlert({ type: "success", message: "Candidate added successfully!" });
         setCandidateData({
           fullName: "",
           email: "",
@@ -151,26 +144,34 @@ const AddCandidates = ({ isCollapsed }) => {
       }
     } catch (error) {
       console.error("Error submitting candidate data:", error);
-
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(error.response.data.message);
-      } else {
-        alert("There was an error submitting the candidate data.");
-      }
+      const errorMessage = error.response?.data?.message || "Error submitting candidate data.";
+      setAlert({ type: "error", message: errorMessage });
     } finally {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    if (alert.message) {
+      const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+      return () => clearTimeout(timer); 
+    }
+  }, [alert]);
 
 
   return (
     <div className={`mx-auto ${isCollapsed ? "max-w-7xl" : "max-w-6xl"}`}>
       <h1 className="text-2xl font-bold mb-2 text-left">Add New Candidate</h1>
+      {alert.message && (
+        <CustomAlert
+          severity={alert.type}
+          message={alert.message}
+        />
+      )}
       <div className="w-full h-[560px] overflow-scroll scrollbar-hide border border-gray-300 rounded-lg mt-2 relative" style={{
         msOverflowStyle: 'none',
         scrollbarWidth: 'none',
       }}>
-       
+        
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Candidate Name */}

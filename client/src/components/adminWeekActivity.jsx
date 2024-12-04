@@ -37,14 +37,6 @@ const WeeklyActivity = ({ userId }) => {
     fetchActivityData();
   }, [userId, processActivityData]);
 
-  const getWeekNumber = (date) => {
-    const startDate = new Date(date.getFullYear(), 0, 1);
-    const diff = date - startDate;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    return Math.ceil(dayOfYear / 7);
-  };
-
   return (
     <div className="bg-white shadow-lg rounded-lg w-full">
       <div className="flex self-center mb-2"> 

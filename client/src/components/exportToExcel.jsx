@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { FcDownload } from 'react-icons/fc';
 import { ImCross } from "react-icons/im";
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import CustomAlert from './customAlert'; 
 
 const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,16 +13,43 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
   const [selectedDateField, setSelectedDateField] = useState('updatedAt');
   const [filteredData, setFilteredData] = useState(data);
   const [isRange, setIsRange] = useState(false);
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const [alert, setAlert] = useState({ type: "", message: "" });
+
+  useEffect(() => {
+    if (alert.message) {
+      const timer = setTimeout(() => setAlert({ type: "", message: "" }), 2000);
+      return () => clearTimeout(timer); 
+    }
+  }, [alert]);
+
+  const toggleModal = () => {
+    if (isModalOpen) {
+      setFromDate('');
+      setToDate('');
+      setSelectedDateField('updatedAt');
+      setIsRange(false);
+    }
+    setIsModalOpen(!isModalOpen);
+  };
 
   const applyFilter = () => {
-    if (!fromDate && !toDate && isRange) {
-      setFilteredData(data);
-      return;
+    if (isRange) {
+      if (!fromDate || !toDate) {
+        setAlert({ type: 'error', message: 'Please select both From and To dates.' });
+        return;
+      }
+    } else {
+      if (!fromDate) {
+        setAlert({ type: 'error', message: 'Please select a Date.' });
+        return;
+      }
     }
+
+    setAlert({ type: '', message: '' }); 
 
     const filtered = data.filter(item => {
       const itemDate = new Date(item[selectedDateField]);
+
       if (isRange) {
         return (
           (!fromDate || itemDate >= new Date(fromDate)) &&
@@ -37,8 +65,10 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
 
     setFilteredData(filtered);
   };
+
   const exportToExcel = () => {
     applyFilter();
+    if (alert.message || (isRange && (!fromDate || !toDate)) || (!isRange && !fromDate)) return;
     const ws = XLSX.utils.json_to_sheet(filteredData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
@@ -63,7 +93,7 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
               <h3 className="text-xl font-semibold self-center">Filter Data for You Wish</h3>
               <button
                 onClick={toggleModal}
-                className="ml-auto mr-2 text-gray-500 hover:text-gray-700"
+                className="ml-auto mr-2 text-gray-500 hover:text-red"
               >
                 <ImCross className='self-center m-auto' />
               </button>
@@ -71,26 +101,27 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
 
             <div className="mb-4">
               <label htmlFor="dateField" className="block text-sm font-medium">Select Date Field</label>
-            
               <Select
                 id="dateField"
+                required
                 value={selectedDateField}
                 size="small"
-                onChange={(e) => setSelectedDateField(e.target.value)}   className="w-full border px-3 mt-2 rounded-md"           >
+                onChange={(e) => setSelectedDateField(e.target.value)}  
+                className="w-full border px-3 mt-2 rounded-md"
+              >
                 <MenuItem value={'joiningDate'}>Joining Date</MenuItem>
                 <MenuItem value={'updatedAt'}>Updated At</MenuItem>
               </Select>
-
             </div>
 
             {/* Toggle Button for Date Range */}
             <div className="mb-4">
-              <button
+              <div
                 onClick={() => setIsRange(!isRange)}
-                className={`w-full ${isRange ? 'bg-blue-500 text-white bg-slate-600' : 'bg-gray-200 text-gray-950'} py-2 font-medium rounded-md`}
+                className={`w-full ${isRange ? 'bg-blue text-white' : 'bg-gray-200 text-gray-950'} py-2 font-medium rounded-md`}
               >
                 {isRange ? 'Switch to Single Date' : 'Switch to Date Range'}
-              </button>
+              </div>
             </div>
 
             {/* Conditional Date Inputs */}
@@ -128,6 +159,15 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
                   className="w-full border px-3 py-2 mt-1 rounded-md"
                 />
               </div>
+            )}
+            
+            {/* Custom Alert Component */}
+            {alert.message && (
+              <CustomAlert
+                severity={alert.type}
+                message={alert.message}
+                className="z-50 absolute right-4 top-4"
+              />
             )}
 
             {/* Modal Actions */}

@@ -55,7 +55,6 @@ const ApprovedCompany = () => {
         <ExportToExcel data={sortedData} fileName="Approved_Companies_List" />
       </div>
 
-      {/* Show loading skeleton while data is being fetched */}
       {loading ? (
         <div className="w-full h-[520px] overflow-scroll scrollbar-hide border border-gray-300 rounded-lg mt-2 animate-pulse">
           <table className="w-full bg-white border-collapse border-0">
