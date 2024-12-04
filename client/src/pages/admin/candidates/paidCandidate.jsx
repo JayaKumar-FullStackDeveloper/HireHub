@@ -127,14 +127,14 @@ const PaidCandidates = ({ isCollapsed }) => {
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">{user.fullName}</td>
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {user.joiningDate
-                      ? new Date(user.dob).toLocaleString('en-US', {
+                      ? new Date(user.joiningDate).toLocaleString('en-US', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
-                      })
+                      }).split(',')
                       : 'N/A'}
                   </td>                  
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
@@ -147,14 +147,14 @@ const PaidCandidates = ({ isCollapsed }) => {
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base text-green-600 font-medium "><span className='bg-green-50 py-1 px-4 rounded-md '>{user.paymentStatus}</span></td>
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {user.paymentStatusChangedAt
-                      ? new Date(user.dob).toLocaleString('en-US', {
+                      ? new Date(user.paymentStatusChangedAt).toLocaleString('en-US', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
-                      })
+                      }).split(',')
                       : 'N/A'}
                   </td>   
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">{user.qualification}</td>

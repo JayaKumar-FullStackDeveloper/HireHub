@@ -12,6 +12,12 @@ module.exports = {
         dark: "#342E37",
         red: "#DB504A",
       },
+      fontFamily: {
+        kanit: ['Kanit', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
+      },
     },
   },
   plugins: [

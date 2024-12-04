@@ -5,7 +5,8 @@ const {
   getAdminProfile, 
   getRecentActivities,
   getWeeklyActivities,
-  getDashboardStats} = require('../controllers/adminController');
+  getDashboardStats,
+  } = require('../controllers/adminController');
 const { protectAdmin } = require('../middleware/adminMiddleware');
 const { getAllNotifications, replyToNotification, createNotification } = require('../controllers/notificationController');
 

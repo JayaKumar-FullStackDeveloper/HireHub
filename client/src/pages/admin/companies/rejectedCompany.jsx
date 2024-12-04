@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import ExportToExcel from '../../../components/exportToExcel';
 
 const RejectedCompanys = () => {
   const [loading, setLoading] = useState(true);
@@ -38,7 +37,6 @@ const RejectedCompanys = () => {
     <div className="max-w-6xl mx-auto">
       <div className='w-full justify-between flex mb-2'>
         <h1 className="text-2xl font-bold self-center text-left">Rejected Company</h1>
-        <ExportToExcel data={sortedData} fileName="Rejected_Companies_List" />
       </div>
 
       {/* Loading Skeleton */}

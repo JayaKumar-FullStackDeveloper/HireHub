@@ -13,17 +13,16 @@ import LogoutConfirmation from "./logoutConfirmation";
 import { useAuth } from "../../components/AuthProvider";
 import { RiArrowDownDoubleFill } from "react-icons/ri";
 
-
 function AdminDashboard({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const { user, logout } = useAuth();
-  const location = useLocation(); 
+  const location = useLocation();
   const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
-  
+
   useEffect(() => {
     if (location.pathname === "/admin") {
       setActiveMenu("Dashboard");
@@ -66,12 +65,12 @@ function AdminDashboard({ children }) {
         >
           {/* Logo Section */}
           <Link to='/admin'>
-          <div className="flex items-center pb-4 pt-4 px-4">
-            <FaHireAHelper className="text-3xl text-sky-600" />
-            {!isCollapsed && (
-              <h1 className="text-sky-600 text-2xl font-bold ml-2">HireHub</h1>
-            )}
-          </div></Link>
+            <div className="flex items-center pb-4 pt-4 px-4">
+              <FaHireAHelper className="text-3xl text-sky-600" />
+              {!isCollapsed && (
+                <h1 className="text-sky-600 text-2xl font-bold ml-2">HireHub</h1>
+              )}
+            </div></Link>
 
           {/* Menu Section */}
           <div className="flex-1 bg-white flex flex-col justify-between">
@@ -82,9 +81,9 @@ function AdminDashboard({ children }) {
                   label: "Dashboard",
                   route: "/admin",
                 },
-                { icon: <BsPersonWorkspace   className="text-lg" />, label: "Candidates" },
-                { icon:<ImOffice  className="text-lg" />, label: "Companies" },
-                { icon: <FaComments  className="text-lg" />, label: "Notifications" },
+                { icon: <BsPersonWorkspace className="text-lg" />, label: "Candidates" },
+                { icon: <ImOffice className="text-lg" />, label: "Companies" },
+                { icon: <FaComments className="text-lg" />, label: "Notifications" },
               ].map((item, index) => (
                 <li key={index} className="pb-1">
                   <button
@@ -238,12 +237,14 @@ function AdminDashboard({ children }) {
                 )}
               </button>
               <span className="lg:ml-2 text-primary lg:text-base font-medium text-left my-auto">Admin Panel</span>
-              <div className="my-auto pl-4 w-3/5">
-                <form action="#">
+              {/* <div className="my-auto pl-4 w-3/5 relative">
+                <form onSubmit={handleSearch}>
                   <div className="flex relative">
                     <input
-                      type="search"
-                      placeholder="Search..."
+                      type="text"
+                      placeholder="Search by user or company name"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
                       className="h-8 rounded-3xl w-full relative pl-4 text-sm bg-slate-200 focus:outline-none p-2 border focus:ring-blue focus:border-blue"
                     />
                     <button
@@ -259,7 +260,38 @@ function AdminDashboard({ children }) {
                     </button>
                   </div>
                 </form>
-              </div>
+                {error && <p className="text-red-500">{error}</p>}
+                <div className="absolute top-12 w-full">
+                  {results.users?.length > 0 && (
+                    <div className="mb-6 w-full">
+                      <ul className="bg-gray-50 p-4 rounded-lg shadow-md">
+                        {results.users.map((user, index) => (
+                          <li key={index} className="border-b py-2">
+                            <strong>{user.name}</strong>
+                            <span className="text-sm text-gray-600"> - {user.companyName}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {results.companies?.length > 0 && (
+                    <div>
+                      <ul className="bg-gray-50 p-4 rounded-lg shadow-md">
+                        {results.companies.map((company, index) => (
+                          <li key={index} className="border-b py-2">
+                            <strong>{company.name}</strong>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {results.users?.length === 0 && results.companies?.length === 0 && (
+                    <p className="text-gray-500">No results found.</p>
+                  )}
+                </div>
+              </div> */}
             </div>
             <div className="flex w-full">
               <span className="lg:ml-2 text-primary lg:text-xl font-bold hidden text-right w-full my-auto mr-5 sm:block">
@@ -267,10 +299,10 @@ function AdminDashboard({ children }) {
               </span>
             </div>
           </div>
-         
+
 
           <div className="bg-gray-100 w-full h-screen rounded-tl-3xl p-2 overflow-y-auto">
-          {React.cloneElement(children, { isCollapsed , user })}</div>
+            {React.cloneElement(children, { isCollapsed, user })}</div>
         </div>
       </div>
     </>

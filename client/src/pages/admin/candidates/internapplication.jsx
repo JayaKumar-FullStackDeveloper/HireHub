@@ -137,7 +137,7 @@ const InternshipAppllication = ({ isCollapsed }) => {
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
-                      })
+                      }).split(',')
                       : 'N/A'}
                   </td>     
                   <td className="py-3 px-3 border-y whitespace-nowrap text-base font-normal">

@@ -125,14 +125,14 @@ const UnPaidCandidates = ({ isCollapsed }) => {
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal overflow-hidden text-ellipsis">{user.fullName}</td>
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">
                     {user.joiningDate
-                      ? new Date(user.dob).toLocaleString('en-US', {
+                      ? new Date(user.joiningDate).toLocaleString('en-US', {
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
-                      })
+                      }).split(',')
                       : 'N/A'}
                   </td>                  
                   <td className="py-2 px-3 border-y whitespace-nowrap text-base font-normal">

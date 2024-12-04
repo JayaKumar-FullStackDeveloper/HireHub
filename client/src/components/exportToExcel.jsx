@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { FcDownload } from 'react-icons/fc';
 import { ImCross } from "react-icons/im";
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,7 +11,7 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
   const [toDate, setToDate] = useState('');
   const [selectedDateField, setSelectedDateField] = useState('updatedAt');
   const [filteredData, setFilteredData] = useState(data);
-  const [isRange, setIsRange] = useState(false);  
+  const [isRange, setIsRange] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const applyFilter = () => {
@@ -17,7 +19,7 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
       setFilteredData(data);
       return;
     }
-  
+
     const filtered = data.filter(item => {
       const itemDate = new Date(item[selectedDateField]);
       if (isRange) {
@@ -27,12 +29,12 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
         );
       } else {
         return (
-          !fromDate || 
+          !fromDate ||
           itemDate.toLocaleDateString() === new Date(fromDate).toLocaleDateString()
         );
       }
     });
-  
+
     setFilteredData(filtered);
   };
   const exportToExcel = () => {
@@ -57,8 +59,8 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
-            <div className='flex w-full justify-between'>
-              <h3 className="text-xl font-semibold mb-4 self-center">Filter Data for You Wish</h3>
+            <div className='flex w-full justify-between mb-4'>
+              <h3 className="text-xl font-semibold self-center">Filter Data for You Wish</h3>
               <button
                 onClick={toggleModal}
                 className="ml-auto mr-2 text-gray-500 hover:text-gray-700"
@@ -68,24 +70,24 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="dateField" className="block text-sm">Select Date Field</label>
-              <select
+              <label htmlFor="dateField" className="block text-sm font-medium">Select Date Field</label>
+            
+              <Select
                 id="dateField"
                 value={selectedDateField}
-                onChange={(e) => setSelectedDateField(e.target.value)}
-                className="w-full border px-3 py-2 mt-1 rounded-md"
-              >
-                <option value="joiningDate">Joining Date</option>
-                <option value="updatedAt">Updated At</option>
-              </select>
+                size="small"
+                onChange={(e) => setSelectedDateField(e.target.value)}   className="w-full border px-3 mt-2 rounded-md"           >
+                <MenuItem value={'joiningDate'}>Joining Date</MenuItem>
+                <MenuItem value={'updatedAt'}>Updated At</MenuItem>
+              </Select>
+
             </div>
 
             {/* Toggle Button for Date Range */}
             <div className="mb-4">
-              <label className="block text-sm mb-2">Select Filter Type</label>
               <button
                 onClick={() => setIsRange(!isRange)}
-                className={`w-full ${isRange ? 'bg-blue-500 text-white' : 'bg-gray-200'} py-2 rounded-md`}
+                className={`w-full ${isRange ? 'bg-blue-500 text-white bg-slate-600' : 'bg-gray-200 text-gray-950'} py-2 font-medium rounded-md`}
               >
                 {isRange ? 'Switch to Single Date' : 'Switch to Date Range'}
               </button>
@@ -95,7 +97,7 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
             {isRange ? (
               <>
                 <div className="mb-4">
-                  <label htmlFor="fromDate" className="block text-sm">From Date</label>
+                  <label htmlFor="fromDate" className="block text-sm text-left">From Date</label>
                   <input
                     type="date"
                     id="fromDate"
@@ -105,7 +107,7 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="toDate" className="block text-sm">To Date</label>
+                  <label htmlFor="toDate" className="block text-sm text-left">To Date</label>
                   <input
                     type="date"
                     id="toDate"
@@ -117,7 +119,7 @@ const ExportToExcel = ({ data, fileName = 'exported_data' }) => {
               </>
             ) : (
               <div className="mb-4">
-                <label htmlFor="fromDate" className="block text-sm">Select Date</label>
+                <label htmlFor="fromDate" className="block text-sm font-medium">Select Date</label>
                 <input
                   type="date"
                   id="fromDate"
