@@ -6,11 +6,11 @@ const {createCandidate,
     getAllCandidates
 } = require('../controllers/candidateController');
 
-const upload = require('../config/multerConfig'); 
+const { upload, uploadToVercelBlob } = require('../config/multerConfig'); 
 
-router.post('/create', upload.single('resume'),createCandidate);
+router.post('/create', upload.single('resume'), uploadToVercelBlob,createCandidate);
 
-router.put('/update/:id', upload.single('resume'), updateCandidateById);
+router.put('/update/:id', upload.single('resume'), uploadToVercelBlob, updateCandidateById);
 router.get('/getall', getAllCandidates);
 router.delete('/:id', deleteCandidateById);
 

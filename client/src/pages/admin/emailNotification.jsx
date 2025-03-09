@@ -27,7 +27,7 @@ const NotificationPage = ({ isCollapsed }) => {
     };
 
     fetchNotifications();
-  }, []);
+  }, [notifications]);
 
   const openModal = (notification) => {
     setSelectedNotification(notification);

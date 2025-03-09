@@ -1,4 +1,3 @@
-// components/ProtectedRoutes.js
 import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 
@@ -12,15 +11,15 @@ export const AdminRoute = () => {
   }
 };
 
-export const UserRoute = () => {
+export const EmployerRoute = () => {
   const { user } = useAuth();
-  return user && (user.role === "user") ? (
+  return user && (user.role === "employer") ? (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow bg-gray-50">
         <Outlet />
       </main>
     </div>
   ) : (
-    <Navigate to="/auth/user/login" />
+    <Navigate to="/auth/employer/signin" />
   );
 };

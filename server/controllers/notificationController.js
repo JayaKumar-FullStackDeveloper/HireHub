@@ -29,13 +29,13 @@ const replyToNotification = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'jayakumarjayakrishnanjk@gmail.com', 
-        pass: 'xjsd eyiu wwpu zqtc', 
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS, 
       },
     });
 
     const mailOptions = {
-      from: 'jayakumarjayakrishnanjk@gmail.com', 
+      from: process.env.EMAIL_USER, 
       to: notification.email,
       subject: `Reply from HireHub Admin: ${notification.subject}`,
       text: reply,

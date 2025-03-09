@@ -8,6 +8,7 @@ const companyRoutes = require('./routes/companyRoutes');
 const candidateRoutes = require('./routes/candidateRoutes');
 const internRoutes = require('./routes/internRoutes');
 const jobsRoute = require('./routes/jobsRoutes');
+const employerRoute = require('./routes/employerRoutes');
 const path = require('path');
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/candidate', candidateRoutes);
 app.use('/api/jobs',jobsRoute);
+app.use('/api/employer',employerRoute);
 
 
 const PORT = process.env.PORT;

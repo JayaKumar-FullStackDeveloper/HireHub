@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import { AuthProvider } from '../components/AuthProvider';
-import { AdminRoute } from '../components/ProtectedRoutes';
+import { AdminRoute, EmployerRoute } from '../components/ProtectedRoutes';
 import Error404 from '../components/Error404';
 import AdminLogin from '../pages/admin/adminLogin';
 import AdminDashboard from '../pages/admin/adminDashboard';
@@ -17,6 +17,11 @@ import ImportCandidates from '../pages/admin/candidates/importCandidate';
 import NotificationPage from '../pages/admin/emailNotification';
 import InternApplication from '../pages/admin/candidates/internapplication';
 import JobAppllication from '../pages/admin/candidates/joblist';
+import EmployeSignUp from '../pages/employe/employeSignUp';
+import EmployerLogin from '../pages/employe/employerLogin';
+import EmployerDashboard from '../pages/employe/employerDashboard';
+import EmpDashboardOverview from '../pages/employe/empDashboardOverview';
+import PostInternship from '../pages/employe/intern/postIntern';
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +37,8 @@ export const router = createBrowserRouter([
         // element: <UserRoute />,
         children: [
           { path:'', element:<HomePage/>},
+          { path:'employe', element:<EmployeSignUp/>},
+          { path:'/auth/employer/signin', element:<EmployerLogin/>},
         ],
       },
       
@@ -50,6 +57,14 @@ export const router = createBrowserRouter([
           { path: 'dashboard/notifications/email', element: <AdminDashboard><NotificationPage/></AdminDashboard> },
           { path: 'dashboard/candidates/Intern', element: <AdminDashboard><InternApplication/></AdminDashboard> },
           { path: 'dashboard/candidates/Jobs', element: <AdminDashboard><JobAppllication/></AdminDashboard> },
+        ],
+      },
+      {
+        path: '/employer',
+        element: <EmployerRoute/>,
+        children: [
+          { path: '', element: <EmployerDashboard><EmpDashboardOverview/></EmployerDashboard> },
+          { path: 'dashboard/internship/post', element: <EmployerDashboard><PostInternship/></EmployerDashboard> },
         ],
       },
       { path: 'auth/admin/login', element: <AdminLogin /> },
