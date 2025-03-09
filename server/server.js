@@ -19,16 +19,16 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Static file serving (if needed)
 app.use('/uploads/resumes', express.static(path.join(__dirname, 'uploads/resumes')));
 
+// API Routes
 app.use('/api/intern', internRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/candidate', candidateRoutes);
-app.use('/api/jobs',jobsRoute);
-app.use('/api/employer',employerRoute);
+app.use('/api/jobs', jobsRoute);
+app.use('/api/employer', employerRoute);
 
-
-const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
+// Vercel requires this for deployment
+module.exports = app;
